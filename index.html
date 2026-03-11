@@ -189,6 +189,78 @@
             padding: 2px 6px; border-radius: 4px;
         }
 
+        /* ── Headlines ── */
+        .headlines-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        .headlines-card h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: white;
+        }
+        .headline-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .headline-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        .headline-item .hl-icon {
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-top: 1px;
+        }
+        .headline-item.hl-urgent {
+            background: rgba(248, 113, 113, 0.08);
+        }
+        .headline-item.hl-urgent .hl-icon {
+            background: rgba(248, 113, 113, 0.2);
+            color: var(--red);
+        }
+        .headline-item.hl-warning {
+            background: rgba(251, 191, 36, 0.06);
+        }
+        .headline-item.hl-warning .hl-icon {
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--yellow);
+        }
+        .headline-item.hl-good {
+            background: rgba(74, 222, 128, 0.06);
+        }
+        .headline-item.hl-good .hl-icon {
+            background: rgba(74, 222, 128, 0.15);
+            color: var(--green);
+        }
+        .headline-item.hl-info {
+            background: rgba(56, 189, 248, 0.06);
+        }
+        .headline-item.hl-info .hl-icon {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent);
+        }
+        .headline-item .hl-text strong {
+            color: white;
+        }
+
         /* ── Timeline styles ── */
         .timeline-container {
             overflow-x: auto;
@@ -565,6 +637,12 @@
                 </div>
             </div>
 
+            <!-- Headlines -->
+            <div class="headlines-card">
+                <h2>Weekly Highlights</h2>
+                <div id="headlines" class="headline-list"></div>
+            </div>
+
             <div class="grid">
                 <!-- Timeline -->
                 <div class="card full-width">
@@ -609,6 +687,7 @@
             </div>
         `;
 
+        renderHeadlines(procurement, assignments);
         renderTimeline(procurement);
         renderStatusChart(procurement);
         renderPriorityList(procurement, assignments);
@@ -621,6 +700,157 @@
                 renderPipelineTable(procurement, assignments, btn.dataset.filter);
             });
         });
+    }
+
+    function renderHeadlines(procurement, assignments) {
+        const container = document.getElementById('headlines');
+        const headlines = [];
+        const now = new Date();
+        const oneWeekFromNow = new Date(now.getTime() + 7 * 86400000);
+
+        // Helper: parse deadline strings like "M2 by 3/31", "U1 by 3/15", "U1 & U2 by 3/15"
+        function parseDeadlineDate(dl) {
+            const match = dl.match(/(\d{1,2})\/(\d{1,2})/);
+            if (match) return new Date(2026, parseInt(match[1]) - 1, parseInt(match[2]));
+            return null;
+        }
+
+        // 1. Deadlines passed or within the next 7 days
+        const deadlineCurricula = new Map(); // code -> { deadline, date, name }
+        for (const a of assignments) {
+            if (!a.deadline) continue;
+            const dlDate = parseDeadlineDate(a.deadline);
+            if (!dlDate) continue;
+            const existing = deadlineCurricula.get(a.curriculum);
+            if (!existing || dlDate < existing.date) {
+                deadlineCurricula.set(a.curriculum, {
+                    deadline: a.deadline,
+                    date: dlDate,
+                    name: CURRICULUM_NAMES[a.curriculum] || a.curriculum,
+                });
+            }
+        }
+
+        for (const [code, info] of deadlineCurricula) {
+            const daysUntil = Math.ceil((info.date - now) / 86400000);
+            if (daysUntil < 0) {
+                // Overdue — check if there's still incomplete work
+                const hasIncomplete = assignments.some(a =>
+                    a.curriculum === code && a.progress.some(p => p === false)
+                );
+                if (hasIncomplete) {
+                    headlines.push({
+                        type: 'urgent',
+                        icon: '!',
+                        text: `<strong>${info.name}</strong> deadline was <strong>${info.deadline.replace(/.*by\s*/, '')}</strong> — has incomplete modules`,
+                        sort: 0,
+                    });
+                }
+            } else if (daysUntil <= 7) {
+                headlines.push({
+                    type: 'warning',
+                    icon: '\u23F1',
+                    text: `<strong>${info.name}</strong> deadline <strong>${info.deadline}</strong> is ${daysUntil === 0 ? 'today' : `in ${daysUntil} day${daysUntil > 1 ? 's' : ''}`}`,
+                    sort: 1,
+                });
+            }
+        }
+
+        // 2. Products almost done (close to completion)
+        const almostDone = procurement.filter(p =>
+            p.procurementStatus.toLowerCase().includes('almost')
+        );
+        for (const p of almostDone) {
+            headlines.push({
+                type: 'good',
+                icon: '\u2713',
+                text: `<strong>${CURRICULUM_NAMES[p.code] || p.code}</strong> procurement is almost done — nearing completion`,
+                sort: 2,
+            });
+        }
+
+        // 3. Highest priority items that aren't done
+        const highestNotDone = procurement.filter(p =>
+            p.priority === 'Highest' && !p.procurementStatus.toLowerCase().includes('done')
+        );
+        for (const p of highestNotDone) {
+            headlines.push({
+                type: 'urgent',
+                icon: '\u2191',
+                text: `<strong>${CURRICULUM_NAMES[p.code] || p.code}</strong> is <strong>highest priority</strong> and currently ${p.procurementStatus.toLowerCase()}`,
+                sort: 0.5,
+            });
+        }
+
+        // 4. Products with significant module progress (>75% complete across all assignments)
+        const progressByCurriculum = new Map();
+        for (const a of assignments) {
+            const existing = progressByCurriculum.get(a.curriculum) || { done: 0, total: 0 };
+            const checks = a.progress.filter(p => p !== null);
+            existing.done += checks.filter(Boolean).length;
+            existing.total += checks.length;
+            progressByCurriculum.set(a.curriculum, existing);
+        }
+        for (const [code, prog] of progressByCurriculum) {
+            if (prog.total === 0) continue;
+            const pct = prog.done / prog.total;
+            const procItem = procurement.find(p => p.code === code);
+            if (!procItem) continue;
+            const s = procItem.procurementStatus.toLowerCase();
+            if (s.includes('done')) continue; // already called out
+            if (pct >= 0.75 && pct < 1) {
+                headlines.push({
+                    type: 'info',
+                    icon: '\u25B2',
+                    text: `<strong>${CURRICULUM_NAMES[code] || code}</strong> is <strong>${Math.round(pct * 100)}%</strong> through module-level work (${prog.done}/${prog.total})`,
+                    sort: 3,
+                });
+            }
+        }
+
+        // 5. Products on hold or blocked with notes about next steps
+        const onHold = procurement.filter(p =>
+            p.assignments?.toLowerCase() === 'hold' && p.nextStep
+        );
+        for (const p of onHold) {
+            const snippet = p.nextStep.length > 80 ? p.nextStep.slice(0, 80) + '...' : p.nextStep;
+            headlines.push({
+                type: 'info',
+                icon: '\u23F8',
+                text: `<strong>${CURRICULUM_NAMES[p.code] || p.code}</strong> is on hold — ${snippet}`,
+                sort: 4,
+            });
+        }
+
+        // 6. Upcoming start dates in the next 2 weeks
+        for (const p of procurement) {
+            const start = parseStartDate(p.startDate);
+            if (!start) continue;
+            const daysUntilStart = Math.ceil((start - now) / 86400000);
+            if (daysUntilStart > 0 && daysUntilStart <= 14 && p.procurementStatus.toLowerCase() === 'not started') {
+                headlines.push({
+                    type: 'info',
+                    icon: '\u2192',
+                    text: `<strong>${CURRICULUM_NAMES[p.code] || p.code}</strong> is set to kick off <strong>${p.startDate}</strong> (${daysUntilStart} days)`,
+                    sort: 3.5,
+                });
+            }
+        }
+
+        // Sort and render
+        headlines.sort((a, b) => a.sort - b.sort);
+
+        if (headlines.length === 0) {
+            container.innerHTML = '<div style="color: var(--muted); font-size: 0.85rem;">No notable updates this week.</div>';
+            return;
+        }
+
+        container.innerHTML = headlines.map(h => `
+            <div class="headline-item hl-${h.type}">
+                <div class="hl-icon">${h.icon}</div>
+                <div class="hl-text">${h.text}</div>
+            </div>
+        `).join('');
     }
 
     function renderTimeline(procurement) {
