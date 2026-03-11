@@ -601,6 +601,8 @@
                     <div class="filter-bar">
                         <button class="filter-btn active" data-filter="all">All</button>
                         <button class="filter-btn" data-filter="active">Active Only</button>
+                        <button class="filter-btn" data-filter="procurement">In-Progress Procurement</button>
+                        <button class="filter-btn" data-filter="conversion">In-Progress Conversion</button>
                     </div>
                     <div id="pipelineTable"></div>
                 </div>
@@ -817,6 +819,20 @@
             !p.procurementStatus.toLowerCase().includes('n/a')
         );
 
+        // For procurement/conversion filters, we filter at the assignment row level
+        const taskFilter = (filter === 'procurement') ? 'Procurement' :
+                           (filter === 'conversion') ? 'Conversion' : null;
+
+        // When filtering by task type, only show curricula that have matching in-progress rows
+        if (taskFilter) {
+            const codesWithTask = new Set(
+                assignments
+                    .filter(a => a.task === taskFilter && a.progress.some(p => p === false))
+                    .map(a => a.curriculum)
+            );
+            filteredProcurement = procurement.filter(p => codesWithTask.has(p.code));
+        }
+
         let html = `<table class="pipeline-table">
             <thead><tr>
                 <th>Curriculum</th>
@@ -827,7 +843,13 @@
             </tr></thead><tbody>`;
 
         for (const cur of filteredProcurement) {
-            const curAssignments = assignments.filter(a => a.curriculum === cur.code);
+            let curAssignments = assignments.filter(a => a.curriculum === cur.code);
+
+            // Filter assignments to only the selected task type with incomplete work
+            if (taskFilter) {
+                curAssignments = curAssignments.filter(a => a.task === taskFilter && a.progress.some(p => p === false));
+            }
+
             const displayName = CURRICULUM_NAMES[cur.code] || cur.code;
             const rowspan = Math.max(curAssignments.length, 1);
 
