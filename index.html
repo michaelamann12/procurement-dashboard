@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procurement & Curriculum Pipeline</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --border: #334155;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #38bdf8;
+            --green: #4ade80;
+            --yellow: #fbbf24;
+            --red: #f87171;
+            --purple: #a78bfa;
+            --orange: #fb923c;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+        .header .subtitle {
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        .refresh-info {
+            color: var(--muted);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .refresh-info .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .stat-card .label {
+            color: var(--muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+        }
+        .stat-card .detail {
+            color: var(--muted);
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+        .card h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: white;
+        }
+        .card.full-width {
+            grid-column: 1 / -1;
+        }
+        /* Pipeline table */
+        .pipeline-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        .pipeline-table th {
+            text-align: left;
+            color: var(--muted);
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .pipeline-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        .pipeline-table tr:last-child td { border-bottom: none; }
+        .pipeline-table tr:hover { background: rgba(56, 189, 248, 0.05); }
+        .status-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .status-done { background: rgba(74, 222, 128, 0.15); color: var(--green); }
+        .status-almost { background: rgba(251, 191, 36, 0.15); color: var(--yellow); }
+        .status-started { background: rgba(56, 189, 248, 0.15); color: var(--accent); }
+        .status-not-started { background: rgba(248, 113, 113, 0.15); color: var(--red); }
+        .status-na { background: rgba(148, 163, 184, 0.1); color: var(--muted); }
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.6s ease;
+        }
+        .progress-text {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+        .team-section {
+            margin-bottom: 24px;
+        }
+        .team-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .team-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+        }
+        .curriculum-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+        .curriculum-row .name {
+            width: 120px;
+            flex-shrink: 0;
+            font-weight: 500;
+        }
+        .curriculum-row .bar-container {
+            flex: 1;
+        }
+        .curriculum-row .pct {
+            width: 45px;
+            text-align: right;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+        .legend {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+        .legend-swatch {
+            width: 12px; height: 12px;
+            border-radius: 3px;
+        }
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 28px);
+            gap: 4px;
+        }
+        .module-cell {
+            width: 28px; height: 28px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: default;
+        }
+        .module-cell.done { background: rgba(74, 222, 128, 0.25); color: var(--green); }
+        .module-cell.not-done { background: rgba(248, 113, 113, 0.12); color: var(--red); }
+        .module-cell.na { background: rgba(148, 163, 184, 0.08); color: var(--muted); }
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .filter-btn.active { background: rgba(56, 189, 248, 0.15); border-color: var(--accent); color: var(--accent); }
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--muted);
+        }
+        .loading .spinner {
+            width: 32px; height: 32px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .tooltip {
+            position: relative;
+        }
+        .tooltip:hover::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #475569;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            z-index: 10;
+        }
+        .priority-high { color: var(--red); }
+        .priority-highest { color: #f43f5e; font-weight: 700; }
+        .priority-medium { color: var(--yellow); }
+        .priority-low { color: var(--muted); }
+        .deadline-tag {
+            font-size: 0.7rem;
+            color: var(--orange);
+            background: rgba(251, 146, 60, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>Procurement & Curriculum Pipeline</h1>
+            <div class="subtitle">2026–27 Activity Creation</div>
+        </div>
+        <div class="refresh-info">
+            <div class="dot"></div>
+            <span id="lastRefresh">Loading...</span>
+        </div>
+    </div>
+
+    <div id="app">
+        <div class="loading">
+            <div class="spinner"></div>
+            <div>Connecting to Google Sheets...</div>
+        </div>
+    </div>
+
+    <script>
+    // ── Configuration ──
+    const SHEET_ID = '1f7YOtX503uiQGC2f_MXTDiz5q-rPkhQ1yzSV0ir6Xak';
+
+    // We use a Google Apps Script web app as a proxy to read the private sheet.
+    // If you haven't deployed the Apps Script yet, set APPS_SCRIPT_URL below.
+    // Fallback: set USE_PUBLISHED_CSV = true and publish the sheet to the web.
+    let APPS_SCRIPT_URL = localStorage.getItem('appsScriptUrl') || '';
+    let USE_PUBLISHED_CSV = !APPS_SCRIPT_URL;
+
+    // Published CSV URLs (fallback — requires File > Share > Publish to web)
+    const CSV_URLS = {
+        procurement: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=2037193503`,
+        assignments: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=814508291`,
+    };
+
+    // ── Curriculum metadata ──
+    const CURRICULUM_NAMES = {
+        'AM_AMP_TX': 'Amplify (TX)',
+        'AM_AMP_XX': 'Amplify (Nat\'l)',
+        'AM_CK3_XX': 'CKLA 3rd Ed',
+        'AM_CK2_XX': 'CKLA 2nd Ed',
+        'EL_1ST_XX': 'EL 1st Ed',
+        'EL_2ND_XX': 'EL 2nd Ed',
+        'EL_V25_XX': 'EL 2025',
+        'FT_FTN_XX': 'Fishtank',
+        'GM_AAL_XX': 'AAL',
+        'GM_WNW_AF': 'W&W (AF)',
+        'GM_WNW_XX': 'W&W (Nat\'l)',
+        'HM_I2L_XX': 'Into Literature',
+        'HM_V20_XX': 'HMH 2020',
+        'LA_GDB_XX': 'Guidebooks',
+        'MG_STS_DU': 'StudySync (Duval)',
+        'MG_STS_FL': 'StudySync (FL)',
+        'MG_STS_XX': 'StudySync (Nat\'l)',
+        'NP_NOV_XX': 'Novels',
+        'OE_SLP_XX': 'Savvas (OE)',
+        'SV_MYP_XX': 'MyPerspectives',
+        'SV_V25_XX': 'MyPerspectives 2025',
+        'TX_BBO_XX': 'Bluebonnet',
+        'TX_HOU_XX': 'Houston',
+    };
+
+    // ── Data fetching via Google Visualization API (no auth needed for viewable sheets) ──
+    async function fetchGviz(url) {
+        const resp = await fetch(url);
+        const text = await resp.text();
+        // Response is: google.visualization.Query.setResponse({...})
+        const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/);
+        if (!jsonStr) throw new Error('Could not parse gviz response');
+        const data = JSON.parse(jsonStr[1]);
+        if (data.status === 'error') throw new Error(data.errors?.[0]?.detailed_message || 'Sheet access denied');
+        const cols = data.table.cols.map(c => c.label || '');
+        const rows = data.table.rows.map(r => r.c.map(cell => {
+            if (!cell) return '';
+            if (cell.v === null || cell.v === undefined) return '';
+            return String(cell.v);
+        }));
+        return { cols, rows };
+    }
+
+    // ── Fetch via Apps Script proxy ──
+    async function fetchAppsScript() {
+        const resp = await fetch(APPS_SCRIPT_URL);
+        return await resp.json();
+    }
+
+    // ── Parse procurement data ──
+    function parseProcurement(cols, rows) {
+        return rows.filter(r => r[0] && r[0].trim()).map(r => ({
+            code: r[0]?.trim() || '',
+            teamLead: r[1]?.trim() || '',
+            designLead: r[2]?.trim() || '',
+            procurementStatus: r[3]?.trim() || '',
+            fileConventionsStatus: r[4]?.trim() || '',
+            assignments: r[5]?.trim() || '',
+            nextStep: r[6]?.trim() || '',
+            notes: r[7]?.trim() || '',
+            priority: r[8]?.trim() || '',
+            startDate: r[9]?.trim() || '',
+        }));
+    }
+
+    // ── Parse CEC assignments (with merged cell handling) ──
+    function parseAssignments(cols, rows) {
+        // Skip header rows (row 0 is "Progress Monitoring", row 1 is column headers)
+        const dataRows = rows.slice(1); // skip the "Progress Monitoring" row
+        const items = [];
+        let currentCurriculum = '';
+        let currentDescription = '';
+        let currentInstructions = '';
+        let currentContractor = '';
+
+        for (const r of dataRows) {
+            if (r[0] && r[0].trim()) {
+                currentCurriculum = r[0].trim();
+                currentDescription = r[1]?.trim() || '';
+                currentInstructions = r[2]?.trim() || '';
+            }
+            if (r[3] && r[3].trim()) {
+                currentContractor = r[3].trim();
+            }
+
+            const grade = r[4]?.trim() || '';
+            const task = r[5]?.trim() || '';
+            const deadline = r[6]?.trim() || '';
+            const convention = r[7]?.trim() || '';
+
+            if (!grade || !task) continue;
+
+            // Progress columns start at index 8
+            const progress = [];
+            for (let i = 8; i < r.length; i++) {
+                const val = r[i]?.trim().toUpperCase();
+                if (val === 'TRUE') progress.push(true);
+                else if (val === 'FALSE') progress.push(false);
+                else if (val === 'N/A') progress.push(null);
+                else if (val) progress.push(false);
+            }
+
+            items.push({
+                curriculum: currentCurriculum,
+                description: currentDescription,
+                contractor: currentContractor,
+                grade,
+                task,
+                deadline,
+                convention,
+                progress,
+            });
+        }
+        return items;
+    }
+
+    // ── Status helpers ──
+    function statusClass(status) {
+        const s = status.toLowerCase();
+        if (s.includes('done')) return 'status-done';
+        if (s.includes('almost')) return 'status-almost';
+        if (s.includes('started')) return 'status-started';
+        if (s.includes('not started')) return 'status-not-started';
+        if (s.includes('n/a') || s.includes('hold')) return 'status-na';
+        return 'status-na';
+    }
+
+    function priorityClass(priority) {
+        const p = priority.toLowerCase();
+        if (p === 'highest') return 'priority-highest';
+        if (p === 'high') return 'priority-high';
+        if (p === 'medium') return 'priority-medium';
+        return 'priority-low';
+    }
+
+    function progressColor(pct) {
+        if (pct >= 0.8) return 'var(--green)';
+        if (pct >= 0.4) return 'var(--yellow)';
+        if (pct > 0) return 'var(--accent)';
+        return 'var(--red)';
+    }
+
+    // ── Build UI ──
+    function render(procurement, assignments) {
+        const app = document.getElementById('app');
+
+        // ── Compute stats ──
+        const totalProducts = procurement.filter(p =>
+            !['N/A', 'Hold', ''].includes(p.procurementStatus) &&
+            !p.procurementStatus.toLowerCase().includes('n/a')
+        ).length;
+        const doneProducts = procurement.filter(p =>
+            p.procurementStatus.toLowerCase().includes('done')
+        ).length;
+        const startedProducts = procurement.filter(p =>
+            p.procurementStatus.toLowerCase() === 'started' ||
+            p.procurementStatus.toLowerCase() === 'almost done'
+        ).length;
+        const notStartedProducts = procurement.filter(p =>
+            p.procurementStatus.toLowerCase() === 'not started'
+        ).length;
+
+        // Assignment progress
+        const allChecks = assignments.flatMap(a => a.progress.filter(p => p !== null));
+        const doneChecks = allChecks.filter(Boolean).length;
+        const totalChecks = allChecks.length;
+
+        // Team splits
+        const megCurricula = procurement.filter(p => p.teamLead === 'Meg');
+        const ericCurricula = procurement.filter(p => p.teamLead === 'Eric');
+
+        function teamAssignmentProgress(teamCurricula) {
+            const codes = new Set(teamCurricula.map(c => c.code));
+            const teamAssign = assignments.filter(a => codes.has(a.curriculum));
+            const checks = teamAssign.flatMap(a => a.progress.filter(p => p !== null));
+            return { done: checks.filter(Boolean).length, total: checks.length };
+        }
+
+        const megProgress = teamAssignmentProgress(megCurricula);
+        const ericProgress = teamAssignmentProgress(ericCurricula);
+
+        // ── Render ──
+        app.innerHTML = `
+            <!-- Stats row -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="label">Overall Module Progress</div>
+                    <div class="value">${totalChecks ? Math.round(doneChecks / totalChecks * 100) : 0}%</div>
+                    <div class="detail">${doneChecks} of ${totalChecks} units/modules complete</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Products Online</div>
+                    <div class="value">${doneProducts}</div>
+                    <div class="detail">of ${totalProducts} active products</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Meg's Team</div>
+                    <div class="value">${megProgress.total ? Math.round(megProgress.done / megProgress.total * 100) : 0}%</div>
+                    <div class="detail">${megProgress.done}/${megProgress.total} modules · ${megCurricula.length} products</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Eric's Team</div>
+                    <div class="value">${ericProgress.total ? Math.round(ericProgress.done / ericProgress.total * 100) : 0}%</div>
+                    <div class="detail">${ericProgress.done}/${ericProgress.total} modules · ${ericCurricula.length} products</div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <!-- Team Lead Progress -->
+                <div class="card">
+                    <h2>Meg's Portfolio</h2>
+                    <div id="megTeam"></div>
+                </div>
+                <div class="card">
+                    <h2>Eric's Portfolio</h2>
+                    <div id="ericTeam"></div>
+                </div>
+
+                <!-- Procurement Status Overview -->
+                <div class="card">
+                    <h2>Procurement Status</h2>
+                    <canvas id="statusChart" height="260"></canvas>
+                </div>
+
+                <!-- Priority View -->
+                <div class="card">
+                    <h2>Priority & Deadlines</h2>
+                    <div id="priorityList"></div>
+                </div>
+
+                <!-- Full pipeline table -->
+                <div class="card full-width">
+                    <h2>Curriculum Pipeline — Module-Level Detail</h2>
+                    <div class="legend">
+                        <div class="legend-item"><div class="legend-swatch" style="background: rgba(74, 222, 128, 0.25)"></div> Complete</div>
+                        <div class="legend-item"><div class="legend-swatch" style="background: rgba(248, 113, 113, 0.12)"></div> Not Complete</div>
+                        <div class="legend-item"><div class="legend-swatch" style="background: rgba(148, 163, 184, 0.08)"></div> N/A</div>
+                    </div>
+                    <div class="filter-bar">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="meg">Meg's Team</button>
+                        <button class="filter-btn" data-filter="eric">Eric's Team</button>
+                        <button class="filter-btn" data-filter="active">Active Only</button>
+                    </div>
+                    <div id="pipelineTable"></div>
+                </div>
+            </div>
+        `;
+
+        // ── Team portfolio bars ──
+        renderTeamBars('megTeam', megCurricula, assignments);
+        renderTeamBars('ericTeam', ericCurricula, assignments);
+
+        // ── Status donut chart ──
+        renderStatusChart(procurement);
+
+        // ── Priority list ──
+        renderPriorityList(procurement);
+
+        // ── Pipeline table ──
+        renderPipelineTable(procurement, assignments, 'all');
+
+        // ── Filter buttons ──
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderPipelineTable(procurement, assignments, btn.dataset.filter);
+            });
+        });
+    }
+
+    function renderTeamBars(containerId, teamCurricula, assignments) {
+        const container = document.getElementById(containerId);
+        let html = '';
+
+        for (const cur of teamCurricula) {
+            const curAssignments = assignments.filter(a => a.curriculum === cur.code);
+            const checks = curAssignments.flatMap(a => a.progress.filter(p => p !== null));
+            const done = checks.filter(Boolean).length;
+            const total = checks.length;
+            const pct = total ? done / total : 0;
+            const displayName = CURRICULUM_NAMES[cur.code] || cur.code;
+
+            const statusBadge = `<span class="status-badge ${statusClass(cur.procurementStatus)}">${cur.procurementStatus}</span>`;
+
+            html += `
+                <div class="curriculum-row">
+                    <div class="name tooltip" data-tip="${cur.code}">${displayName}</div>
+                    <div class="bar-container">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: ${pct * 100}%; background: ${progressColor(pct)}"></div>
+                        </div>
+                    </div>
+                    <div class="pct">${total ? Math.round(pct * 100) + '%' : '—'}</div>
+                    <div>${statusBadge}</div>
+                </div>
+            `;
+        }
+
+        container.innerHTML = html || '<div style="color: var(--muted)">No data</div>';
+    }
+
+    function renderStatusChart(procurement) {
+        const counts = { done: 0, almost: 0, started: 0, notStarted: 0, na: 0 };
+        for (const p of procurement) {
+            const s = p.procurementStatus.toLowerCase();
+            if (s.includes('done')) counts.done++;
+            else if (s.includes('almost')) counts.almost++;
+            else if (s === 'started') counts.started++;
+            else if (s === 'not started') counts.notStarted++;
+            else counts.na++;
+        }
+
+        new Chart(document.getElementById('statusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Done', 'Almost Done', 'Started', 'Not Started', 'N/A / Hold'],
+                datasets: [{
+                    data: [counts.done, counts.almost, counts.started, counts.notStarted, counts.na],
+                    backgroundColor: [
+                        'rgba(74, 222, 128, 0.8)',
+                        'rgba(251, 191, 36, 0.8)',
+                        'rgba(56, 189, 248, 0.8)',
+                        'rgba(248, 113, 113, 0.8)',
+                        'rgba(148, 163, 184, 0.3)',
+                    ],
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#94a3b8', padding: 12, usePointStyle: true, pointStyleWidth: 8 }
+                    }
+                }
+            }
+        });
+    }
+
+    function renderPriorityList(procurement) {
+        const container = document.getElementById('priorityList');
+        const prioritized = procurement
+            .filter(p => p.priority && !['N/A', 'n/a', ''].includes(p.priority))
+            .sort((a, b) => {
+                const order = { 'Highest': 0, 'High': 1, 'Medium': 2, 'Low': 3 };
+                return (order[a.priority] ?? 9) - (order[b.priority] ?? 9);
+            });
+
+        let html = '<table class="pipeline-table"><thead><tr><th>Curriculum</th><th>Priority</th><th>Status</th><th>Start</th></tr></thead><tbody>';
+        for (const p of prioritized) {
+            const displayName = CURRICULUM_NAMES[p.code] || p.code;
+            html += `<tr>
+                <td><strong>${displayName}</strong></td>
+                <td><span class="${priorityClass(p.priority)}">${p.priority}</span></td>
+                <td><span class="status-badge ${statusClass(p.procurementStatus)}">${p.procurementStatus}</span></td>
+                <td style="color: var(--muted)">${p.startDate || '—'}</td>
+            </tr>`;
+        }
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+
+    function renderPipelineTable(procurement, assignments, filter) {
+        const container = document.getElementById('pipelineTable');
+        let filteredProcurement = [...procurement];
+
+        if (filter === 'meg') filteredProcurement = procurement.filter(p => p.teamLead === 'Meg');
+        else if (filter === 'eric') filteredProcurement = procurement.filter(p => p.teamLead === 'Eric');
+        else if (filter === 'active') filteredProcurement = procurement.filter(p =>
+            !['n/a', 'hold', ''].includes(p.procurementStatus.toLowerCase()) &&
+            !p.procurementStatus.toLowerCase().includes('n/a')
+        );
+
+        let html = `<table class="pipeline-table">
+            <thead><tr>
+                <th>Curriculum</th>
+                <th>Lead</th>
+                <th>Status</th>
+                <th>Grade / Task</th>
+                <th>Module/Unit Progress</th>
+                <th>Deadline</th>
+            </tr></thead><tbody>`;
+
+        for (const cur of filteredProcurement) {
+            const curAssignments = assignments.filter(a => a.curriculum === cur.code);
+            const displayName = CURRICULUM_NAMES[cur.code] || cur.code;
+            const rowspan = Math.max(curAssignments.length, 1);
+
+            if (curAssignments.length === 0) {
+                html += `<tr>
+                    <td><strong>${displayName}</strong></td>
+                    <td>${cur.teamLead}</td>
+                    <td><span class="status-badge ${statusClass(cur.procurementStatus)}">${cur.procurementStatus}</span></td>
+                    <td style="color: var(--muted)">—</td>
+                    <td style="color: var(--muted)">No module data</td>
+                    <td>—</td>
+                </tr>`;
+                continue;
+            }
+
+            curAssignments.forEach((a, idx) => {
+                const checks = a.progress.filter(p => p !== null);
+                const done = checks.filter(Boolean).length;
+                const total = checks.length;
+                const convLabel = a.convention === 'Unit' ? 'U' : 'M';
+
+                let moduleCells = '';
+                a.progress.forEach((p, mi) => {
+                    const cls = p === null ? 'na' : p ? 'done' : 'not-done';
+                    moduleCells += `<div class="module-cell ${cls} tooltip" data-tip="${convLabel}${mi + 1}">${convLabel}${mi + 1}</div>`;
+                });
+
+                html += `<tr>`;
+                if (idx === 0) {
+                    html += `<td rowspan="${rowspan}"><strong>${displayName}</strong></td>`;
+                    html += `<td rowspan="${rowspan}">${cur.teamLead}</td>`;
+                    html += `<td rowspan="${rowspan}"><span class="status-badge ${statusClass(cur.procurementStatus)}">${cur.procurementStatus}</span></td>`;
+                }
+                html += `<td>G${a.grade} · ${a.task}</td>`;
+                html += `<td><div class="module-grid">${moduleCells}</div>
+                    <div class="progress-text">${done}/${total} complete</div></td>`;
+                html += `<td>${a.deadline ? `<span class="deadline-tag">${a.deadline}</span>` : '—'}</td>`;
+                html += `</tr>`;
+            });
+        }
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+
+    // ── Main ──
+    async function main() {
+        try {
+            // Try gviz (works if sheet is viewable by anyone with the link)
+            const [procData, assignData] = await Promise.all([
+                fetchGviz(CSV_URLS.procurement),
+                fetchGviz(CSV_URLS.assignments),
+            ]);
+
+            const procurement = parseProcurement(procData.cols, procData.rows);
+            const assignmentsParsed = parseAssignments(assignData.cols, assignData.rows);
+
+            render(procurement, assignmentsParsed);
+            document.getElementById('lastRefresh').textContent =
+                `Live from Google Sheets · ${new Date().toLocaleString()}`;
+
+        } catch (err) {
+            console.error('gviz failed, trying Apps Script...', err);
+
+            if (APPS_SCRIPT_URL) {
+                try {
+                    const data = await fetchAppsScript();
+                    const procurement = parseProcurement([], data.procurement);
+                    const assignmentsParsed = parseAssignments([], data.assignments);
+                    render(procurement, assignmentsParsed);
+                    document.getElementById('lastRefresh').textContent =
+                        `Live from Google Sheets · ${new Date().toLocaleString()}`;
+                    return;
+                } catch (e) {
+                    console.error('Apps Script also failed', e);
+                }
+            }
+
+            document.getElementById('app').innerHTML = `
+                <div class="card" style="max-width: 600px; margin: 60px auto; text-align: center;">
+                    <h2 style="margin-bottom: 12px;">Setup Required</h2>
+                    <p style="color: var(--muted); margin-bottom: 20px;">
+                        The dashboard needs read access to your Google Sheet. Choose one option:
+                    </p>
+                    <div style="text-align: left; margin-bottom: 20px;">
+                        <p style="margin-bottom: 8px;"><strong>Option A: Share the sheet</strong> (easiest)</p>
+                        <ol style="color: var(--muted); font-size: 0.85rem; padding-left: 20px; line-height: 1.8;">
+                            <li>Open the Google Sheet</li>
+                            <li>Click <strong>Share</strong> → <strong>General access</strong> → <strong>"Anyone with the link"</strong> → <strong>Viewer</strong></li>
+                            <li>Reload this page</li>
+                        </ol>
+                    </div>
+                    <div style="text-align: left;">
+                        <p style="margin-bottom: 8px;"><strong>Option B: Apps Script proxy</strong> (keeps sheet private)</p>
+                        <ol style="color: var(--muted); font-size: 0.85rem; padding-left: 20px; line-height: 1.8;">
+                            <li>In the Google Sheet, go to <strong>Extensions → Apps Script</strong></li>
+                            <li>Paste the proxy code (see README)</li>
+                            <li>Deploy as web app → "Anyone" can access</li>
+                            <li>Paste the URL below</li>
+                        </ol>
+                        <div style="margin-top: 12px;">
+                            <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/..."
+                                style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
+                                background: var(--bg); color: var(--text); font-size: 0.85rem;">
+                            <button onclick="saveScriptUrl()" style="margin-top: 8px; padding: 8px 20px;
+                                border-radius: 8px; border: none; background: var(--accent); color: var(--bg);
+                                font-weight: 600; cursor: pointer;">Save & Reload</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    function saveScriptUrl() {
+        const url = document.getElementById('scriptUrl').value.trim();
+        if (url) {
+            localStorage.setItem('appsScriptUrl', url);
+            location.reload();
+        }
+    }
+
+    // Auto-refresh every 5 minutes
+    main();
+    setInterval(main, 5 * 60 * 1000);
+    </script>
+</body>
+</html>
