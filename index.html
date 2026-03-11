@@ -261,6 +261,47 @@
             color: white;
         }
 
+        /* ── Collapsible pipeline ── */
+        .pipeline-wrapper {
+            position: relative;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+        .pipeline-wrapper.collapsed {
+            max-height: 400px;
+        }
+        .pipeline-wrapper.collapsed::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(transparent, var(--card));
+            pointer-events: none;
+        }
+        .pipeline-wrapper.expanded {
+            max-height: none;
+        }
+        .expand-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .expand-btn:hover {
+            background: rgba(56, 189, 248, 0.08);
+            border-color: var(--accent);
+        }
+
         /* ── Timeline styles ── */
         .timeline-container {
             overflow-x: auto;
@@ -643,6 +684,26 @@
                 <div id="headlines" class="headline-list"></div>
             </div>
 
+            <!-- Pipeline detail (moved up) -->
+            <div class="card" style="margin-bottom: 32px;">
+                <h2>Curriculum Pipeline — Module-Level Detail</h2>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-swatch" style="background: rgba(74, 222, 128, 0.25)"></div> Complete</div>
+                    <div class="legend-item"><div class="legend-swatch" style="background: rgba(248, 113, 113, 0.12)"></div> Not Complete</div>
+                    <div class="legend-item"><div class="legend-swatch" style="background: rgba(148, 163, 184, 0.08)"></div> N/A</div>
+                </div>
+                <div class="filter-bar">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="active">Active Only</button>
+                    <button class="filter-btn" data-filter="procurement">In-Progress Procurement</button>
+                    <button class="filter-btn" data-filter="conversion">In-Progress Conversion</button>
+                </div>
+                <div class="pipeline-wrapper collapsed" id="pipelineWrapper">
+                    <div id="pipelineTable"></div>
+                </div>
+                <button class="expand-btn" id="expandBtn" onclick="togglePipeline()">Show all rows</button>
+            </div>
+
             <div class="grid">
                 <!-- Timeline -->
                 <div class="card full-width">
@@ -666,23 +727,6 @@
                 <div class="card">
                     <h2>Priority & Deadlines</h2>
                     <div id="priorityList"></div>
-                </div>
-
-                <!-- Pipeline detail -->
-                <div class="card full-width">
-                    <h2>Curriculum Pipeline — Module-Level Detail</h2>
-                    <div class="legend">
-                        <div class="legend-item"><div class="legend-swatch" style="background: rgba(74, 222, 128, 0.25)"></div> Complete</div>
-                        <div class="legend-item"><div class="legend-swatch" style="background: rgba(248, 113, 113, 0.12)"></div> Not Complete</div>
-                        <div class="legend-item"><div class="legend-swatch" style="background: rgba(148, 163, 184, 0.08)"></div> N/A</div>
-                    </div>
-                    <div class="filter-bar">
-                        <button class="filter-btn active" data-filter="all">All</button>
-                        <button class="filter-btn" data-filter="active">Active Only</button>
-                        <button class="filter-btn" data-filter="procurement">In-Progress Procurement</button>
-                        <button class="filter-btn" data-filter="conversion">In-Progress Conversion</button>
-                    </div>
-                    <div id="pipelineTable"></div>
                 </div>
             </div>
         `;
@@ -1121,6 +1165,21 @@
 
         html += '</tbody></table>';
         container.innerHTML = html;
+    }
+
+    function togglePipeline() {
+        const wrapper = document.getElementById('pipelineWrapper');
+        const btn = document.getElementById('expandBtn');
+        if (wrapper.classList.contains('collapsed')) {
+            wrapper.classList.remove('collapsed');
+            wrapper.classList.add('expanded');
+            btn.textContent = 'Show less';
+        } else {
+            wrapper.classList.remove('expanded');
+            wrapper.classList.add('collapsed');
+            btn.textContent = 'Show all rows';
+            wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     }
 
     async function main() {
