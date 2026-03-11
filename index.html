@@ -609,7 +609,7 @@
 
         renderTimeline(procurement);
         renderStatusChart(procurement);
-        renderPriorityList(procurement);
+        renderPriorityList(procurement, assignments);
         renderPipelineTable(procurement, assignments, 'all');
 
         document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -776,7 +776,7 @@
         });
     }
 
-    function renderPriorityList(procurement) {
+    function renderPriorityList(procurement, assignments) {
         const container = document.getElementById('priorityList');
         const prioritized = procurement
             .filter(p => p.priority && !['N/A', 'n/a', ''].includes(p.priority))
@@ -785,14 +785,23 @@
                 return (order[a.priority] ?? 9) - (order[b.priority] ?? 9);
             });
 
-        let html = '<table class="pipeline-table"><thead><tr><th>Curriculum</th><th>Priority</th><th>Status</th><th>Start</th></tr></thead><tbody>';
+        // Build a map of nearest deadline per curriculum from CEC Assignments
+        function getNextDeadline(code) {
+            const curAssignments = assignments.filter(a => a.curriculum === code && a.deadline);
+            if (curAssignments.length === 0) return null;
+            // Return the first non-empty deadline found
+            return curAssignments[0].deadline;
+        }
+
+        let html = '<table class="pipeline-table"><thead><tr><th>Curriculum</th><th>Priority</th><th>Status</th><th>Next Deadline</th></tr></thead><tbody>';
         for (const p of prioritized) {
             const displayName = CURRICULUM_NAMES[p.code] || p.code;
+            const deadline = getNextDeadline(p.code);
             html += `<tr>
                 <td><strong>${displayName}</strong></td>
                 <td><span class="${priorityClass(p.priority)}">${p.priority}</span></td>
                 <td><span class="status-badge ${statusClass(p.procurementStatus)}">${p.procurementStatus}</span></td>
-                <td style="color: var(--muted)">${p.startDate || '\u2014'}</td>
+                <td>${deadline ? `<span class="deadline-tag">${deadline}</span>` : '<span style="color: var(--muted)">\u2014</span>'}</td>
             </tr>`;
         }
         html += '</tbody></table>';
