@@ -600,8 +600,6 @@
                     </div>
                     <div class="filter-bar">
                         <button class="filter-btn active" data-filter="all">All</button>
-                        <button class="filter-btn" data-filter="meg">Meg's Team</button>
-                        <button class="filter-btn" data-filter="eric">Eric's Team</button>
                         <button class="filter-btn" data-filter="active">Active Only</button>
                     </div>
                     <div id="pipelineTable"></div>
@@ -805,9 +803,7 @@
         const container = document.getElementById('pipelineTable');
         let filteredProcurement = [...procurement];
 
-        if (filter === 'meg') filteredProcurement = procurement.filter(p => p.teamLead === 'Meg');
-        else if (filter === 'eric') filteredProcurement = procurement.filter(p => p.teamLead === 'Eric');
-        else if (filter === 'active') filteredProcurement = procurement.filter(p =>
+        if (filter === 'active') filteredProcurement = procurement.filter(p =>
             !['n/a', 'hold', ''].includes(p.procurementStatus.toLowerCase()) &&
             !p.procurementStatus.toLowerCase().includes('n/a')
         );
@@ -815,7 +811,6 @@
         let html = `<table class="pipeline-table">
             <thead><tr>
                 <th>Curriculum</th>
-                <th>Lead</th>
                 <th>Status</th>
                 <th>Grade / Task</th>
                 <th>Module/Unit Progress</th>
@@ -830,7 +825,6 @@
             if (curAssignments.length === 0) {
                 html += `<tr>
                     <td><strong>${displayName}</strong></td>
-                    <td>${cur.teamLead}</td>
                     <td><span class="status-badge ${statusClass(cur.procurementStatus)}">${cur.procurementStatus}</span></td>
                     <td style="color: var(--muted)">\u2014</td>
                     <td style="color: var(--muted)">No module data</td>
@@ -854,7 +848,6 @@
                 html += '<tr>';
                 if (idx === 0) {
                     html += `<td rowspan="${rowspan}"><strong>${displayName}</strong></td>`;
-                    html += `<td rowspan="${rowspan}">${cur.teamLead}</td>`;
                     html += `<td rowspan="${rowspan}"><span class="status-badge ${statusClass(cur.procurementStatus)}">${cur.procurementStatus}</span></td>`;
                 }
                 html += `<td>G${a.grade} \u00b7 ${a.task}</td>`;
