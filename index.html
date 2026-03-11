@@ -35,15 +35,8 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-        .header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white;
-        }
-        .header .subtitle {
-            color: var(--muted);
-            font-size: 0.85rem;
-        }
+        .header h1 { font-size: 1.5rem; font-weight: 700; color: white; }
+        .header .subtitle { color: var(--muted); font-size: 0.85rem; }
         .refresh-info {
             color: var(--muted);
             font-size: 0.8rem;
@@ -57,10 +50,7 @@
             background: var(--green);
             animation: pulse 2s infinite;
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         .stats-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -80,46 +70,24 @@
             letter-spacing: 0.05em;
             margin-bottom: 4px;
         }
-        .stat-card .value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: white;
-        }
-        .stat-card .detail {
-            color: var(--muted);
-            font-size: 0.8rem;
-            margin-top: 4px;
-        }
+        .stat-card .value { font-size: 2rem; font-weight: 700; color: white; }
+        .stat-card .detail { color: var(--muted); font-size: 0.8rem; margin-top: 4px; }
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 24px;
             margin-bottom: 32px;
         }
-        @media (max-width: 900px) {
-            .grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
         .card {
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 24px;
         }
-        .card h2 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: white;
-        }
-        .card.full-width {
-            grid-column: 1 / -1;
-        }
-        /* Pipeline table */
-        .pipeline-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-        }
+        .card h2 { font-size: 1rem; font-weight: 600; margin-bottom: 16px; color: white; }
+        .card.full-width { grid-column: 1 / -1; }
+        .pipeline-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         .pipeline-table th {
             text-align: left;
             color: var(--muted);
@@ -151,116 +119,49 @@
         .status-not-started { background: rgba(248, 113, 113, 0.15); color: var(--red); }
         .status-na { background: rgba(148, 163, 184, 0.1); color: var(--muted); }
         .progress-bar-bg {
-            width: 100%;
-            height: 8px;
+            width: 100%; height: 8px;
             background: rgba(255,255,255,0.08);
             border-radius: 4px;
             overflow: hidden;
         }
         .progress-bar-fill {
-            height: 100%;
-            border-radius: 4px;
+            height: 100%; border-radius: 4px;
             transition: width 0.6s ease;
         }
-        .progress-text {
-            font-size: 0.75rem;
-            color: var(--muted);
-            margin-top: 4px;
-        }
-        .team-section {
-            margin-bottom: 24px;
-        }
-        .team-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        .team-dot {
-            width: 10px; height: 10px;
-            border-radius: 50%;
-        }
-        .curriculum-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-        }
-        .curriculum-row .name {
-            width: 120px;
-            flex-shrink: 0;
-            font-weight: 500;
-        }
-        .curriculum-row .bar-container {
-            flex: 1;
-        }
-        .curriculum-row .pct {
-            width: 45px;
-            text-align: right;
-            color: var(--muted);
-            font-size: 0.8rem;
-        }
+        .progress-text { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
         .legend {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
+            display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;
         }
         .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.75rem;
-            color: var(--muted);
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.75rem; color: var(--muted);
         }
-        .legend-swatch {
-            width: 12px; height: 12px;
-            border-radius: 3px;
-        }
+        .legend-swatch { width: 12px; height: 12px; border-radius: 3px; }
         .module-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, 28px);
             gap: 4px;
         }
         .module-cell {
-            width: 28px; height: 28px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.65rem;
-            font-weight: 600;
-            cursor: default;
+            width: 28px; height: 28px; border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.65rem; font-weight: 600; cursor: default;
         }
         .module-cell.done { background: rgba(74, 222, 128, 0.25); color: var(--green); }
         .module-cell.not-done { background: rgba(248, 113, 113, 0.12); color: var(--red); }
         .module-cell.na { background: rgba(148, 163, 184, 0.08); color: var(--muted); }
         .filter-bar {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
+            display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
         }
         .filter-btn {
-            padding: 6px 14px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--muted);
-            font-size: 0.8rem;
-            cursor: pointer;
+            padding: 6px 14px; border-radius: 8px;
+            border: 1px solid var(--border); background: transparent;
+            color: var(--muted); font-size: 0.8rem; cursor: pointer;
             transition: all 0.2s;
         }
         .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
         .filter-btn.active { background: rgba(56, 189, 248, 0.15); border-color: var(--accent); color: var(--accent); }
-        .loading {
-            text-align: center;
-            padding: 60px;
-            color: var(--muted);
-        }
+        .loading { text-align: center; padding: 60px; color: var(--muted); }
         .loading .spinner {
             width: 32px; height: 32px;
             border: 3px solid var(--border);
@@ -270,33 +171,157 @@
             margin: 0 auto 16px;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .tooltip {
-            position: relative;
-        }
+        .tooltip { position: relative; }
         .tooltip:hover::after {
             content: attr(data-tip);
-            position: absolute;
-            bottom: calc(100% + 6px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: #475569;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            white-space: nowrap;
-            z-index: 10;
+            position: absolute; bottom: calc(100% + 6px); left: 50%;
+            transform: translateX(-50%); background: #475569; color: white;
+            padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            white-space: nowrap; z-index: 10;
         }
         .priority-high { color: var(--red); }
         .priority-highest { color: #f43f5e; font-weight: 700; }
         .priority-medium { color: var(--yellow); }
         .priority-low { color: var(--muted); }
         .deadline-tag {
-            font-size: 0.7rem;
-            color: var(--orange);
+            font-size: 0.7rem; color: var(--orange);
             background: rgba(251, 146, 60, 0.1);
-            padding: 2px 6px;
+            padding: 2px 6px; border-radius: 4px;
+        }
+
+        /* ── Timeline styles ── */
+        .timeline-container {
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+        .timeline-chart {
+            min-width: 700px;
+            position: relative;
+        }
+        .timeline-header {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 4px;
+        }
+        .timeline-label-col {
+            width: 160px;
+            flex-shrink: 0;
+            padding: 6px 12px 6px 0;
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .timeline-months {
+            flex: 1;
+            display: flex;
+            position: relative;
+        }
+        .timeline-month {
+            flex: 1;
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--muted);
+            padding: 6px 0;
+            border-left: 1px solid rgba(255,255,255,0.05);
+        }
+        .timeline-month.current {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .timeline-row {
+            display: flex;
+            align-items: center;
+            min-height: 36px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .timeline-row:hover {
+            background: rgba(56, 189, 248, 0.03);
+        }
+        .timeline-row-label {
+            width: 160px;
+            flex-shrink: 0;
+            padding-right: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .timeline-row-bars {
+            flex: 1;
+            position: relative;
+            height: 28px;
+            display: flex;
+        }
+        .timeline-bar {
+            position: absolute;
+            height: 20px;
+            top: 4px;
             border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s;
+            cursor: default;
+            min-width: 2px;
+        }
+        .timeline-bar:hover {
+            filter: brightness(1.2);
+            z-index: 2;
+        }
+        .timeline-bar.done {
+            background: rgba(74, 222, 128, 0.5);
+            border: 1px solid rgba(74, 222, 128, 0.7);
+        }
+        .timeline-bar.in-progress {
+            background: rgba(56, 189, 248, 0.4);
+            border: 1px solid rgba(56, 189, 248, 0.6);
+        }
+        .timeline-bar.upcoming {
+            background: rgba(148, 163, 184, 0.15);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+        .timeline-bar.almost {
+            background: rgba(251, 191, 36, 0.4);
+            border: 1px solid rgba(251, 191, 36, 0.6);
+        }
+        .timeline-now {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent);
+            z-index: 3;
+            opacity: 0.6;
+        }
+        .timeline-now::after {
+            content: 'Today';
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6rem;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+        .timeline-grid-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: rgba(255,255,255,0.04);
+        }
+        .timeline-section-label {
+            padding: 8px 0 4px;
+            font-size: 0.7rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-bottom: 1px solid var(--border);
         }
     </style>
 </head>
@@ -304,7 +329,7 @@
     <div class="header">
         <div>
             <h1>Procurement & Curriculum Pipeline</h1>
-            <div class="subtitle">2026–27 Activity Creation</div>
+            <div class="subtitle">2026-27 Activity Creation</div>
         </div>
         <div class="refresh-info">
             <div class="dot"></div>
@@ -320,22 +345,14 @@
     </div>
 
     <script>
-    // ── Configuration ──
     const SHEET_ID = '1f7YOtX503uiQGC2f_MXTDiz5q-rPkhQ1yzSV0ir6Xak';
-
-    // We use a Google Apps Script web app as a proxy to read the private sheet.
-    // If you haven't deployed the Apps Script yet, set APPS_SCRIPT_URL below.
-    // Fallback: set USE_PUBLISHED_CSV = true and publish the sheet to the web.
     let APPS_SCRIPT_URL = localStorage.getItem('appsScriptUrl') || '';
-    let USE_PUBLISHED_CSV = !APPS_SCRIPT_URL;
 
-    // Published CSV URLs (fallback — requires File > Share > Publish to web)
     const CSV_URLS = {
         procurement: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=2037193503`,
         assignments: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=814508291`,
     };
 
-    // ── Curriculum metadata ──
     const CURRICULUM_NAMES = {
         'AM_AMP_TX': 'Amplify (TX)',
         'AM_AMP_XX': 'Amplify (Nat\'l)',
@@ -362,11 +379,9 @@
         'TX_HOU_XX': 'Houston',
     };
 
-    // ── Data fetching via Google Visualization API (no auth needed for viewable sheets) ──
     async function fetchGviz(url) {
         const resp = await fetch(url);
         const text = await resp.text();
-        // Response is: google.visualization.Query.setResponse({...})
         const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/);
         if (!jsonStr) throw new Error('Could not parse gviz response');
         const data = JSON.parse(jsonStr[1]);
@@ -380,13 +395,6 @@
         return { cols, rows };
     }
 
-    // ── Fetch via Apps Script proxy ──
-    async function fetchAppsScript() {
-        const resp = await fetch(APPS_SCRIPT_URL);
-        return await resp.json();
-    }
-
-    // ── Parse procurement data ──
     function parseProcurement(cols, rows) {
         return rows.filter(r => r[0] && r[0].trim()).map(r => ({
             code: r[0]?.trim() || '',
@@ -402,34 +410,27 @@
         }));
     }
 
-    // ── Parse CEC assignments (with merged cell handling) ──
     function parseAssignments(cols, rows) {
-        // Skip header rows (row 0 is "Progress Monitoring", row 1 is column headers)
-        const dataRows = rows.slice(1); // skip the "Progress Monitoring" row
+        const dataRows = rows.slice(1);
         const items = [];
         let currentCurriculum = '';
         let currentDescription = '';
-        let currentInstructions = '';
         let currentContractor = '';
 
         for (const r of dataRows) {
             if (r[0] && r[0].trim()) {
                 currentCurriculum = r[0].trim();
                 currentDescription = r[1]?.trim() || '';
-                currentInstructions = r[2]?.trim() || '';
             }
             if (r[3] && r[3].trim()) {
                 currentContractor = r[3].trim();
             }
-
             const grade = r[4]?.trim() || '';
             const task = r[5]?.trim() || '';
             const deadline = r[6]?.trim() || '';
             const convention = r[7]?.trim() || '';
-
             if (!grade || !task) continue;
 
-            // Progress columns start at index 8
             const progress = [];
             for (let i = 8; i < r.length; i++) {
                 const val = r[i]?.trim().toUpperCase();
@@ -443,24 +444,18 @@
                 curriculum: currentCurriculum,
                 description: currentDescription,
                 contractor: currentContractor,
-                grade,
-                task,
-                deadline,
-                convention,
-                progress,
+                grade, task, deadline, convention, progress,
             });
         }
         return items;
     }
 
-    // ── Status helpers ──
     function statusClass(status) {
         const s = status.toLowerCase();
         if (s.includes('done')) return 'status-done';
         if (s.includes('almost')) return 'status-almost';
         if (s.includes('started')) return 'status-started';
         if (s.includes('not started')) return 'status-not-started';
-        if (s.includes('n/a') || s.includes('hold')) return 'status-na';
         return 'status-na';
     }
 
@@ -479,11 +474,57 @@
         return 'var(--red)';
     }
 
-    // ── Build UI ──
+    // ── Parse a start date like "3/1", "4/15", "Rolling" into a Date (year 2026) ──
+    function parseStartDate(str) {
+        if (!str || str === 'Rolling' || str === 'N/A' || str === '#N/A') return null;
+        const parts = str.split('/');
+        if (parts.length === 2) {
+            const month = parseInt(parts[0]) - 1;
+            const day = parseInt(parts[1]);
+            if (!isNaN(month) && !isNaN(day)) return new Date(2026, month, day);
+        }
+        return null;
+    }
+
+    // ── Estimate end date from status and start ──
+    function estimateEndDate(proc, startDate) {
+        const s = proc.procurementStatus.toLowerCase();
+        if (s.includes('done')) {
+            // Already done — bar ends at start + 2 weeks (or today if no start)
+            if (startDate) return new Date(Math.min(startDate.getTime() + 14 * 86400000, Date.now()));
+            return new Date(Date.now() - 7 * 86400000);
+        }
+        if (s.includes('almost')) {
+            // Almost done — ends ~1 week from now
+            return new Date(Date.now() + 7 * 86400000);
+        }
+        if (s === 'started') {
+            // In progress — estimate based on priority
+            const p = proc.priority.toLowerCase();
+            if (p === 'highest') return new Date(Date.now() + 21 * 86400000);
+            if (p === 'high') return new Date(Date.now() + 30 * 86400000);
+            return new Date(Date.now() + 45 * 86400000);
+        }
+        if (s === 'not started') {
+            // Not started — project from start date
+            if (startDate) return new Date(startDate.getTime() + 45 * 86400000);
+            return new Date(2026, 4, 15); // May 15 default
+        }
+        return null;
+    }
+
+    function timelineBarClass(status) {
+        const s = status.toLowerCase();
+        if (s.includes('done')) return 'done';
+        if (s.includes('almost')) return 'almost';
+        if (s === 'started') return 'in-progress';
+        return 'upcoming';
+    }
+
+    // ── Render ──
     function render(procurement, assignments) {
         const app = document.getElementById('app');
 
-        // ── Compute stats ──
         const totalProducts = procurement.filter(p =>
             !['N/A', 'Hold', ''].includes(p.procurementStatus) &&
             !p.procurementStatus.toLowerCase().includes('n/a')
@@ -495,32 +536,12 @@
             p.procurementStatus.toLowerCase() === 'started' ||
             p.procurementStatus.toLowerCase() === 'almost done'
         ).length;
-        const notStartedProducts = procurement.filter(p =>
-            p.procurementStatus.toLowerCase() === 'not started'
-        ).length;
 
-        // Assignment progress
         const allChecks = assignments.flatMap(a => a.progress.filter(p => p !== null));
         const doneChecks = allChecks.filter(Boolean).length;
         const totalChecks = allChecks.length;
 
-        // Team splits
-        const megCurricula = procurement.filter(p => p.teamLead === 'Meg');
-        const ericCurricula = procurement.filter(p => p.teamLead === 'Eric');
-
-        function teamAssignmentProgress(teamCurricula) {
-            const codes = new Set(teamCurricula.map(c => c.code));
-            const teamAssign = assignments.filter(a => codes.has(a.curriculum));
-            const checks = teamAssign.flatMap(a => a.progress.filter(p => p !== null));
-            return { done: checks.filter(Boolean).length, total: checks.length };
-        }
-
-        const megProgress = teamAssignmentProgress(megCurricula);
-        const ericProgress = teamAssignmentProgress(ericCurricula);
-
-        // ── Render ──
         app.innerHTML = `
-            <!-- Stats row -->
             <div class="stats-row">
                 <div class="stat-card">
                     <div class="label">Overall Module Progress</div>
@@ -533,41 +554,43 @@
                     <div class="detail">of ${totalProducts} active products</div>
                 </div>
                 <div class="stat-card">
-                    <div class="label">Meg's Team</div>
-                    <div class="value">${megProgress.total ? Math.round(megProgress.done / megProgress.total * 100) : 0}%</div>
-                    <div class="detail">${megProgress.done}/${megProgress.total} modules · ${megCurricula.length} products</div>
+                    <div class="label">In Progress</div>
+                    <div class="value">${startedProducts}</div>
+                    <div class="detail">started or almost done</div>
                 </div>
                 <div class="stat-card">
-                    <div class="label">Eric's Team</div>
-                    <div class="value">${ericProgress.total ? Math.round(ericProgress.done / ericProgress.total * 100) : 0}%</div>
-                    <div class="detail">${ericProgress.done}/${ericProgress.total} modules · ${ericCurricula.length} products</div>
+                    <div class="label">Not Started</div>
+                    <div class="value">${totalProducts - doneProducts - startedProducts}</div>
+                    <div class="detail">awaiting kickoff</div>
                 </div>
             </div>
 
             <div class="grid">
-                <!-- Team Lead Progress -->
-                <div class="card">
-                    <h2>Meg's Portfolio</h2>
-                    <div id="megTeam"></div>
-                </div>
-                <div class="card">
-                    <h2>Eric's Portfolio</h2>
-                    <div id="ericTeam"></div>
+                <!-- Timeline -->
+                <div class="card full-width">
+                    <h2>Procurement Timeline</h2>
+                    <div class="legend">
+                        <div class="legend-item"><div class="legend-swatch" style="background: rgba(74, 222, 128, 0.5)"></div> Done</div>
+                        <div class="legend-item"><div class="legend-swatch" style="background: rgba(251, 191, 36, 0.4)"></div> Almost Done</div>
+                        <div class="legend-item"><div class="legend-swatch" style="background: rgba(56, 189, 248, 0.4)"></div> In Progress</div>
+                        <div class="legend-item"><div class="legend-swatch" style="background: rgba(148, 163, 184, 0.15); border: 1px solid rgba(148, 163, 184, 0.3)"></div> Upcoming</div>
+                    </div>
+                    <div id="timeline"></div>
                 </div>
 
-                <!-- Procurement Status Overview -->
+                <!-- Status donut -->
                 <div class="card">
                     <h2>Procurement Status</h2>
                     <canvas id="statusChart" height="260"></canvas>
                 </div>
 
-                <!-- Priority View -->
+                <!-- Priority -->
                 <div class="card">
                     <h2>Priority & Deadlines</h2>
                     <div id="priorityList"></div>
                 </div>
 
-                <!-- Full pipeline table -->
+                <!-- Pipeline detail -->
                 <div class="card full-width">
                     <h2>Curriculum Pipeline — Module-Level Detail</h2>
                     <div class="legend">
@@ -586,20 +609,11 @@
             </div>
         `;
 
-        // ── Team portfolio bars ──
-        renderTeamBars('megTeam', megCurricula, assignments);
-        renderTeamBars('ericTeam', ericCurricula, assignments);
-
-        // ── Status donut chart ──
+        renderTimeline(procurement);
         renderStatusChart(procurement);
-
-        // ── Priority list ──
         renderPriorityList(procurement);
-
-        // ── Pipeline table ──
         renderPipelineTable(procurement, assignments, 'all');
 
-        // ── Filter buttons ──
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -609,35 +623,119 @@
         });
     }
 
-    function renderTeamBars(containerId, teamCurricula, assignments) {
-        const container = document.getElementById(containerId);
-        let html = '';
+    function renderTimeline(procurement) {
+        const container = document.getElementById('timeline');
 
-        for (const cur of teamCurricula) {
-            const curAssignments = assignments.filter(a => a.curriculum === cur.code);
-            const checks = curAssignments.flatMap(a => a.progress.filter(p => p !== null));
-            const done = checks.filter(Boolean).length;
-            const total = checks.length;
-            const pct = total ? done / total : 0;
-            const displayName = CURRICULUM_NAMES[cur.code] || cur.code;
+        // Timeline range: Feb 2026 — Jun 2026
+        const timelineStart = new Date(2026, 1, 1);  // Feb 1
+        const timelineEnd = new Date(2026, 5, 30);    // Jun 30
+        const totalMs = timelineEnd - timelineStart;
+        const now = new Date();
 
-            const statusBadge = `<span class="status-badge ${statusClass(cur.procurementStatus)}">${cur.procurementStatus}</span>`;
+        // Months for header
+        const months = [
+            { label: 'Feb', start: new Date(2026, 1, 1) },
+            { label: 'Mar', start: new Date(2026, 2, 1) },
+            { label: 'Apr', start: new Date(2026, 3, 1) },
+            { label: 'May', start: new Date(2026, 4, 1) },
+            { label: 'Jun', start: new Date(2026, 5, 1) },
+        ];
 
-            html += `
-                <div class="curriculum-row">
-                    <div class="name tooltip" data-tip="${cur.code}">${displayName}</div>
-                    <div class="bar-container">
-                        <div class="progress-bar-bg">
-                            <div class="progress-bar-fill" style="width: ${pct * 100}%; background: ${progressColor(pct)}"></div>
-                        </div>
-                    </div>
-                    <div class="pct">${total ? Math.round(pct * 100) + '%' : '—'}</div>
-                    <div>${statusBadge}</div>
-                </div>
-            `;
+        const currentMonth = now.getMonth(); // 0-indexed
+
+        // Filter to active products only and sort by start date / status
+        const statusOrder = { 'done': 0, 'almost': 1, 'started': 2, 'not started': 3, 'na': 4 };
+        function getStatusKey(s) {
+            s = s.toLowerCase();
+            if (s.includes('done') && !s.includes('not')) return 'done';
+            if (s.includes('almost')) return 'almost';
+            if (s === 'started') return 'started';
+            if (s === 'not started') return 'not started';
+            return 'na';
         }
 
-        container.innerHTML = html || '<div style="color: var(--muted)">No data</div>';
+        const active = procurement
+            .filter(p => {
+                const s = p.procurementStatus.toLowerCase();
+                return s && !s.includes('n/a') && s !== 'hold' && s !== '';
+            })
+            .sort((a, b) => {
+                const sa = statusOrder[getStatusKey(a.procurementStatus)] ?? 9;
+                const sb = statusOrder[getStatusKey(b.procurementStatus)] ?? 9;
+                if (sa !== sb) return sa - sb;
+                const da = parseStartDate(a.startDate);
+                const db = parseStartDate(b.startDate);
+                if (da && db) return da - db;
+                if (da) return -1;
+                if (db) return 1;
+                return 0;
+            });
+
+        // Build HTML
+        let html = '<div class="timeline-container"><div class="timeline-chart">';
+
+        // Header
+        html += '<div class="timeline-header">';
+        html += '<div class="timeline-label-col">Curriculum</div>';
+        html += '<div class="timeline-months" style="position: relative;">';
+        months.forEach(m => {
+            const isCurrent = m.start.getMonth() === currentMonth && m.start.getFullYear() === now.getFullYear();
+            html += `<div class="timeline-month ${isCurrent ? 'current' : ''}">${m.label}</div>`;
+        });
+        html += '</div></div>';
+
+        // Rows
+        // Group by status for visual clarity
+        const groups = [
+            { label: 'Online', items: active.filter(p => getStatusKey(p.procurementStatus) === 'done') },
+            { label: 'Coming Soon', items: active.filter(p => ['almost', 'started'].includes(getStatusKey(p.procurementStatus))) },
+            { label: 'Upcoming', items: active.filter(p => getStatusKey(p.procurementStatus) === 'not started') },
+        ];
+
+        groups.forEach(group => {
+            if (group.items.length === 0) return;
+
+            html += `<div class="timeline-section-label">${group.label}</div>`;
+
+            group.items.forEach(proc => {
+                const displayName = CURRICULUM_NAMES[proc.code] || proc.code;
+                const startDate = parseStartDate(proc.startDate) || new Date(2026, 2, 1);
+                const endDate = estimateEndDate(proc, startDate);
+                if (!endDate) return;
+
+                const barStart = Math.max(0, (startDate - timelineStart) / totalMs * 100);
+                const barEnd = Math.min(100, (endDate - timelineStart) / totalMs * 100);
+                const barWidth = Math.max(barEnd - barStart, 1);
+                const barClass = timelineBarClass(proc.procurementStatus);
+
+                const statusBadge = `<span class="status-badge ${statusClass(proc.procurementStatus)}" style="font-size: 0.65rem; padding: 2px 6px;">${proc.procurementStatus}</span>`;
+
+                html += `<div class="timeline-row">`;
+                html += `<div class="timeline-row-label">${displayName}</div>`;
+                html += `<div class="timeline-row-bars" style="position: relative;">`;
+
+                // Grid lines for month boundaries
+                months.forEach(m => {
+                    const pct = (m.start - timelineStart) / totalMs * 100;
+                    html += `<div class="timeline-grid-line" style="left: ${pct}%"></div>`;
+                });
+
+                // Today marker
+                if (now >= timelineStart && now <= timelineEnd) {
+                    const nowPct = (now - timelineStart) / totalMs * 100;
+                    html += `<div class="timeline-now" style="left: ${nowPct}%"></div>`;
+                }
+
+                // Bar
+                const tipText = `${proc.code}: ${proc.procurementStatus}${proc.startDate ? ' | Start: ' + proc.startDate : ''}`;
+                html += `<div class="timeline-bar ${barClass} tooltip" data-tip="${tipText}" style="left: ${barStart}%; width: ${barWidth}%;"></div>`;
+
+                html += '</div></div>';
+            });
+        });
+
+        html += '</div></div>';
+        container.innerHTML = html;
     }
 
     function renderStatusChart(procurement) {
@@ -696,7 +794,7 @@
                 <td><strong>${displayName}</strong></td>
                 <td><span class="${priorityClass(p.priority)}">${p.priority}</span></td>
                 <td><span class="status-badge ${statusClass(p.procurementStatus)}">${p.procurementStatus}</span></td>
-                <td style="color: var(--muted)">${p.startDate || '—'}</td>
+                <td style="color: var(--muted)">${p.startDate || '\u2014'}</td>
             </tr>`;
         }
         html += '</tbody></table>';
@@ -734,9 +832,9 @@
                     <td><strong>${displayName}</strong></td>
                     <td>${cur.teamLead}</td>
                     <td><span class="status-badge ${statusClass(cur.procurementStatus)}">${cur.procurementStatus}</span></td>
-                    <td style="color: var(--muted)">—</td>
+                    <td style="color: var(--muted)">\u2014</td>
                     <td style="color: var(--muted)">No module data</td>
-                    <td>—</td>
+                    <td>\u2014</td>
                 </tr>`;
                 continue;
             }
@@ -753,17 +851,17 @@
                     moduleCells += `<div class="module-cell ${cls} tooltip" data-tip="${convLabel}${mi + 1}">${convLabel}${mi + 1}</div>`;
                 });
 
-                html += `<tr>`;
+                html += '<tr>';
                 if (idx === 0) {
                     html += `<td rowspan="${rowspan}"><strong>${displayName}</strong></td>`;
                     html += `<td rowspan="${rowspan}">${cur.teamLead}</td>`;
                     html += `<td rowspan="${rowspan}"><span class="status-badge ${statusClass(cur.procurementStatus)}">${cur.procurementStatus}</span></td>`;
                 }
-                html += `<td>G${a.grade} · ${a.task}</td>`;
+                html += `<td>G${a.grade} \u00b7 ${a.task}</td>`;
                 html += `<td><div class="module-grid">${moduleCells}</div>
                     <div class="progress-text">${done}/${total} complete</div></td>`;
-                html += `<td>${a.deadline ? `<span class="deadline-tag">${a.deadline}</span>` : '—'}</td>`;
-                html += `</tr>`;
+                html += `<td>${a.deadline ? `<span class="deadline-tag">${a.deadline}</span>` : '\u2014'}</td>`;
+                html += '</tr>';
             });
         }
 
@@ -771,10 +869,8 @@
         container.innerHTML = html;
     }
 
-    // ── Main ──
     async function main() {
         try {
-            // Try gviz (works if sheet is viewable by anyone with the link)
             const [procData, assignData] = await Promise.all([
                 fetchGviz(CSV_URLS.procurement),
                 fetchGviz(CSV_URLS.assignments),
@@ -785,70 +881,41 @@
 
             render(procurement, assignmentsParsed);
             document.getElementById('lastRefresh').textContent =
-                `Live from Google Sheets · ${new Date().toLocaleString()}`;
+                `Live from Google Sheets \u00b7 ${new Date().toLocaleString()}`;
 
         } catch (err) {
-            console.error('gviz failed, trying Apps Script...', err);
+            console.error('Data fetch failed:', err);
 
             if (APPS_SCRIPT_URL) {
                 try {
-                    const data = await fetchAppsScript();
-                    const procurement = parseProcurement([], data.procurement);
-                    const assignmentsParsed = parseAssignments([], data.assignments);
-                    render(procurement, assignmentsParsed);
+                    const resp = await fetch(APPS_SCRIPT_URL);
+                    const data = await resp.json();
+                    render(parseProcurement([], data.procurement), parseAssignments([], data.assignments));
                     document.getElementById('lastRefresh').textContent =
-                        `Live from Google Sheets · ${new Date().toLocaleString()}`;
+                        `Live from Google Sheets \u00b7 ${new Date().toLocaleString()}`;
                     return;
-                } catch (e) {
-                    console.error('Apps Script also failed', e);
-                }
+                } catch (e) { console.error('Apps Script also failed', e); }
             }
 
             document.getElementById('app').innerHTML = `
                 <div class="card" style="max-width: 600px; margin: 60px auto; text-align: center;">
                     <h2 style="margin-bottom: 12px;">Setup Required</h2>
                     <p style="color: var(--muted); margin-bottom: 20px;">
-                        The dashboard needs read access to your Google Sheet. Choose one option:
+                        The dashboard needs read access to your Google Sheet.
                     </p>
                     <div style="text-align: left; margin-bottom: 20px;">
-                        <p style="margin-bottom: 8px;"><strong>Option A: Share the sheet</strong> (easiest)</p>
+                        <p style="margin-bottom: 8px;"><strong>Share the sheet:</strong></p>
                         <ol style="color: var(--muted); font-size: 0.85rem; padding-left: 20px; line-height: 1.8;">
                             <li>Open the Google Sheet</li>
-                            <li>Click <strong>Share</strong> → <strong>General access</strong> → <strong>"Anyone with the link"</strong> → <strong>Viewer</strong></li>
+                            <li>Click <strong>Share</strong> \u2192 <strong>General access</strong> \u2192 <strong>"Anyone with the link"</strong> \u2192 <strong>Viewer</strong></li>
                             <li>Reload this page</li>
                         </ol>
-                    </div>
-                    <div style="text-align: left;">
-                        <p style="margin-bottom: 8px;"><strong>Option B: Apps Script proxy</strong> (keeps sheet private)</p>
-                        <ol style="color: var(--muted); font-size: 0.85rem; padding-left: 20px; line-height: 1.8;">
-                            <li>In the Google Sheet, go to <strong>Extensions → Apps Script</strong></li>
-                            <li>Paste the proxy code (see README)</li>
-                            <li>Deploy as web app → "Anyone" can access</li>
-                            <li>Paste the URL below</li>
-                        </ol>
-                        <div style="margin-top: 12px;">
-                            <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/..."
-                                style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
-                                background: var(--bg); color: var(--text); font-size: 0.85rem;">
-                            <button onclick="saveScriptUrl()" style="margin-top: 8px; padding: 8px 20px;
-                                border-radius: 8px; border: none; background: var(--accent); color: var(--bg);
-                                font-weight: 600; cursor: pointer;">Save & Reload</button>
-                        </div>
                     </div>
                 </div>
             `;
         }
     }
 
-    function saveScriptUrl() {
-        const url = document.getElementById('scriptUrl').value.trim();
-        if (url) {
-            localStorage.setItem('appsScriptUrl', url);
-            location.reload();
-        }
-    }
-
-    // Auto-refresh every 5 minutes
     main();
     setInterval(main, 5 * 60 * 1000);
     </script>
