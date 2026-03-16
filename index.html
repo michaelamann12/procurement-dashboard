@@ -189,76 +189,30 @@
             padding: 2px 6px; border-radius: 4px;
         }
 
-        /* ── Headlines ── */
-        .headlines-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 32px;
-        }
-        .headlines-card h2 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: white;
-        }
-        .headline-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .headline-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            line-height: 1.4;
-        }
-        .headline-item .hl-icon {
-            flex-shrink: 0;
-            width: 22px;
-            height: 22px;
+        /* ── Module badges ── */
+        .module-badge {
+            display: inline-block;
+            padding: 2px 8px;
             border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 700;
-            margin-top: 1px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            margin: 2px 3px 2px 0;
+            white-space: nowrap;
         }
-        .headline-item.hl-urgent {
-            background: rgba(248, 113, 113, 0.08);
+        .module-badge.complete {
+            background: rgba(74, 222, 128, 0.18);
+            color: var(--green);
+            border: 1px solid rgba(74, 222, 128, 0.35);
         }
-        .headline-item.hl-urgent .hl-icon {
-            background: rgba(248, 113, 113, 0.2);
-            color: var(--red);
-        }
-        .headline-item.hl-warning {
-            background: rgba(251, 191, 36, 0.06);
-        }
-        .headline-item.hl-warning .hl-icon {
+        .module-badge.partial {
             background: rgba(251, 191, 36, 0.15);
             color: var(--yellow);
+            border: 1px solid rgba(251, 191, 36, 0.3);
         }
-        .headline-item.hl-good {
-            background: rgba(74, 222, 128, 0.06);
-        }
-        .headline-item.hl-good .hl-icon {
-            background: rgba(74, 222, 128, 0.15);
-            color: var(--green);
-        }
-        .headline-item.hl-info {
-            background: rgba(56, 189, 248, 0.06);
-        }
-        .headline-item.hl-info .hl-icon {
-            background: rgba(56, 189, 248, 0.15);
-            color: var(--accent);
-        }
-        .headline-item .hl-text strong {
-            color: white;
+        .module-badge.none {
+            background: rgba(248, 113, 113, 0.1);
+            color: var(--red);
+            border: 1px solid rgba(248, 113, 113, 0.25);
         }
 
         /* ── Collapsible pipeline ── */
@@ -301,141 +255,6 @@
             background: rgba(56, 189, 248, 0.08);
             border-color: var(--accent);
         }
-
-        /* ── Timeline styles ── */
-        .timeline-container {
-            overflow-x: auto;
-            padding-bottom: 8px;
-        }
-        .timeline-chart {
-            min-width: 700px;
-            position: relative;
-        }
-        .timeline-header {
-            display: flex;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 4px;
-        }
-        .timeline-label-col {
-            width: 160px;
-            flex-shrink: 0;
-            padding: 6px 12px 6px 0;
-            font-size: 0.75rem;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .timeline-months {
-            flex: 1;
-            display: flex;
-            position: relative;
-        }
-        .timeline-month {
-            flex: 1;
-            text-align: center;
-            font-size: 0.7rem;
-            color: var(--muted);
-            padding: 6px 0;
-            border-left: 1px solid rgba(255,255,255,0.05);
-        }
-        .timeline-month.current {
-            color: var(--accent);
-            font-weight: 600;
-        }
-        .timeline-row {
-            display: flex;
-            align-items: center;
-            min-height: 36px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-        }
-        .timeline-row:hover {
-            background: rgba(56, 189, 248, 0.03);
-        }
-        .timeline-row-label {
-            width: 160px;
-            flex-shrink: 0;
-            padding-right: 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .timeline-row-bars {
-            flex: 1;
-            position: relative;
-            height: 28px;
-            display: flex;
-        }
-        .timeline-bar {
-            position: absolute;
-            height: 20px;
-            top: 4px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: white;
-            transition: all 0.3s;
-            cursor: default;
-            min-width: 2px;
-        }
-        .timeline-bar:hover {
-            filter: brightness(1.2);
-            z-index: 2;
-        }
-        .timeline-bar.done {
-            background: rgba(74, 222, 128, 0.5);
-            border: 1px solid rgba(74, 222, 128, 0.7);
-        }
-        .timeline-bar.in-progress {
-            background: rgba(56, 189, 248, 0.4);
-            border: 1px solid rgba(56, 189, 248, 0.6);
-        }
-        .timeline-bar.upcoming {
-            background: rgba(148, 163, 184, 0.15);
-            border: 1px solid rgba(148, 163, 184, 0.3);
-        }
-        .timeline-bar.almost {
-            background: rgba(251, 191, 36, 0.4);
-            border: 1px solid rgba(251, 191, 36, 0.6);
-        }
-        .timeline-now {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: var(--accent);
-            z-index: 3;
-            opacity: 0.6;
-        }
-        .timeline-now::after {
-            content: 'Today';
-            position: absolute;
-            top: -18px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.6rem;
-            color: var(--accent);
-            white-space: nowrap;
-        }
-        .timeline-grid-line {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            background: rgba(255,255,255,0.04);
-        }
-        .timeline-section-label {
-            padding: 8px 0 4px;
-            font-size: 0.7rem;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            border-bottom: 1px solid var(--border);
-        }
     </style>
 </head>
 <body>
@@ -459,12 +278,8 @@
 
     <script>
     const SHEET_ID = '1f7YOtX503uiQGC2f_MXTDiz5q-rPkhQ1yzSV0ir6Xak';
-    let APPS_SCRIPT_URL = localStorage.getItem('appsScriptUrl') || '';
 
-    const CSV_URLS = {
-        procurement: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=2037193503`,
-        assignments: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=814508291`,
-    };
+    const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Procurement%20Final`;
 
     const CURRICULUM_NAMES = {
         'AM_AMP_TX': 'Amplify (TX)',
@@ -490,6 +305,7 @@
         'SV_V25_XX': 'MyPerspectives 2025',
         'TX_BBO_XX': 'Bluebonnet',
         'TX_HOU_XX': 'Houston',
+        'BE_BAD_XX': 'Be A Doer',
     };
 
     async function fetchGviz(url) {
@@ -503,538 +319,194 @@
         const rows = data.table.rows.map(r => r.c.map(cell => {
             if (!cell) return '';
             if (cell.v === null || cell.v === undefined) return '';
+            // Preserve booleans as-is; only stringify other values
+            if (typeof cell.v === 'boolean') return cell.v;
             return String(cell.v);
         }));
         return { cols, rows };
     }
 
-    function parseProcurement(cols, rows) {
-        return rows.filter(r => r[0] && r[0].trim()).map(r => ({
-            code: r[0]?.trim() || '',
-            teamLead: r[1]?.trim() || '',
-            designLead: r[2]?.trim() || '',
-            procurementStatus: r[3]?.trim() || '',
-            fileConventionsStatus: r[4]?.trim() || '',
-            assignments: r[5]?.trim() || '',
-            nextStep: r[6]?.trim() || '',
-            notes: r[7]?.trim() || '',
-            priority: r[8]?.trim() || '',
-            startDate: r[9]?.trim() || '',
-        }));
-    }
+    function parseProcurementFinal(data) {
+        const { cols, rows } = data;
+        // rows[0] is the header row — skip it (already consumed by fetchGviz cols)
+        // Actually fetchGviz returns all data rows including what gviz treats as data
+        // Row 0 in gviz data is the first data row (header was consumed as cols labels)
+        const variants = [];
+        const variantMap = new Map();
 
-    function parseAssignments(cols, rows) {
-        const dataRows = rows.slice(1);
-        const items = [];
-        let currentCurriculum = '';
-        let currentDescription = '';
-        let currentContractor = '';
+        let currentCode = '';
+        let currentHeadline = '';
+        let currentLink = '';
 
-        for (const r of dataRows) {
-            if (r[0] && r[0].trim()) {
-                currentCurriculum = r[0].trim();
-                currentDescription = r[1]?.trim() || '';
-            }
-            if (r[3] && r[3].trim()) {
-                currentContractor = r[3].trim();
-            }
-            const grade = r[4]?.trim() || '';
-            const task = r[5]?.trim() || '';
-            const deadline = r[6]?.trim() || '';
-            const convention = r[7]?.trim() || '';
-            if (!grade || !task) continue;
+        for (const r of rows) {
+            // Col A: CURR VAR ID (carry forward)
+            const colA = typeof r[0] === 'string' ? r[0].trim() : '';
+            const colB = typeof r[1] === 'string' ? r[1].trim() : '';
+            const colC = typeof r[2] === 'string' ? r[2].trim() : '';
+            // Col D: module number (float string like "6.0", or empty)
+            const colD = r[3];
+            // Col E: convention ("Module", "Unit", or empty)
+            const colE = typeof r[4] === 'string' ? r[4].trim() : '';
+            // Cols F onwards: booleans or empty strings
+            const checkboxCols = r.slice(5);
 
-            const progress = [];
-            for (let i = 8; i < r.length; i++) {
-                const val = r[i]?.trim().toUpperCase();
-                if (val === 'TRUE') progress.push(true);
-                else if (val === 'FALSE') progress.push(false);
-                else if (val === 'N/A') progress.push(null);
-                else if (val) progress.push(false);
+            if (colA) {
+                currentCode = colA;
+                currentHeadline = colB;
+                currentLink = colC;
             }
 
-            items.push({
-                curriculum: currentCurriculum,
-                description: currentDescription,
-                contractor: currentContractor,
-                grade, task, deadline, convention, progress,
-            });
+            if (!currentCode) continue;
+
+            // Parse module number
+            let moduleNum = null;
+            if (colD !== '' && colD !== null && colD !== undefined) {
+                const n = parseFloat(String(colD));
+                if (!isNaN(n)) moduleNum = Math.round(n);
+            }
+
+            // Parse checkboxes: true = complete, false = incomplete, '' = N/A (skip)
+            const checkboxes = [];
+            for (const val of checkboxCols) {
+                if (val === true) checkboxes.push(true);
+                else if (val === false) checkboxes.push(false);
+                else if (val === 'true' || val === 'TRUE') checkboxes.push(true);
+                else if (val === 'false' || val === 'FALSE') checkboxes.push(false);
+                // empty string or anything else = N/A, skip
+            }
+
+            const completedCount = checkboxes.filter(Boolean).length;
+            const totalCount = checkboxes.length;
+
+            const moduleEntry = {
+                number: moduleNum,
+                convention: colE || 'Module',
+                checkboxes,
+                completedCount,
+                totalCount,
+            };
+
+            if (!variantMap.has(currentCode)) {
+                const variant = {
+                    code: currentCode,
+                    headline: currentHeadline,
+                    link: currentLink,
+                    modules: [],
+                    totalChecks: 0,
+                    doneChecks: 0,
+                    completionPct: 0,
+                };
+                variantMap.set(currentCode, variant);
+                variants.push(variant);
+            }
+
+            const variant = variantMap.get(currentCode);
+            variant.modules.push(moduleEntry);
+            variant.totalChecks += totalCount;
+            variant.doneChecks += completedCount;
         }
-        return items;
-    }
 
-    function statusClass(status) {
-        const s = status.toLowerCase();
-        if (s.includes('done')) return 'status-done';
-        if (s.includes('almost')) return 'status-almost';
-        if (s.includes('started')) return 'status-started';
-        if (s.includes('not started')) return 'status-not-started';
-        return 'status-na';
-    }
+        // Compute completionPct for each variant
+        for (const v of variants) {
+            v.completionPct = v.totalChecks > 0
+                ? Math.round(v.doneChecks / v.totalChecks * 100)
+                : 0;
+        }
 
-    function priorityClass(priority) {
-        const p = priority.toLowerCase();
-        if (p === 'highest') return 'priority-highest';
-        if (p === 'high') return 'priority-high';
-        if (p === 'medium') return 'priority-medium';
-        return 'priority-low';
+        return variants;
     }
 
     function progressColor(pct) {
-        if (pct >= 0.8) return 'var(--green)';
-        if (pct >= 0.4) return 'var(--yellow)';
+        if (pct >= 100) return 'var(--green)';
+        if (pct >= 40) return 'var(--yellow)';
         if (pct > 0) return 'var(--accent)';
         return 'var(--red)';
     }
 
-    // ── Parse a start date like "3/1", "4/15", "Rolling" into a Date (year 2026) ──
-    function parseStartDate(str) {
-        if (!str || str === 'Rolling' || str === 'N/A' || str === '#N/A') return null;
-        const parts = str.split('/');
-        if (parts.length === 2) {
-            const month = parseInt(parts[0]) - 1;
-            const day = parseInt(parts[1]);
-            if (!isNaN(month) && !isNaN(day)) return new Date(2026, month, day);
-        }
-        return null;
-    }
+    let statusChartInstance = null;
 
-    // ── Estimate end date from status and start ──
-    function estimateEndDate(proc, startDate) {
-        const s = proc.procurementStatus.toLowerCase();
-        if (s.includes('done')) {
-            // Already done — bar ends at start + 2 weeks (or today if no start)
-            if (startDate) return new Date(Math.min(startDate.getTime() + 14 * 86400000, Date.now()));
-            return new Date(Date.now() - 7 * 86400000);
-        }
-        if (s.includes('almost')) {
-            // Almost done — ends ~1 week from now
-            return new Date(Date.now() + 7 * 86400000);
-        }
-        if (s === 'started') {
-            // In progress — estimate based on priority
-            const p = proc.priority.toLowerCase();
-            if (p === 'highest') return new Date(Date.now() + 21 * 86400000);
-            if (p === 'high') return new Date(Date.now() + 30 * 86400000);
-            return new Date(Date.now() + 45 * 86400000);
-        }
-        if (s === 'not started') {
-            // Not started — project from start date
-            if (startDate) return new Date(startDate.getTime() + 45 * 86400000);
-            return new Date(2026, 4, 15); // May 15 default
-        }
-        return null;
-    }
-
-    function timelineBarClass(status) {
-        const s = status.toLowerCase();
-        if (s.includes('done')) return 'done';
-        if (s.includes('almost')) return 'almost';
-        if (s === 'started') return 'in-progress';
-        return 'upcoming';
-    }
-
-    // ── Render ──
-    function render(procurement, assignments) {
+    function render(variants) {
         const app = document.getElementById('app');
 
-        const totalProducts = procurement.filter(p =>
-            !['N/A', 'Hold', ''].includes(p.procurementStatus) &&
-            !p.procurementStatus.toLowerCase().includes('n/a')
-        ).length;
-        const doneProducts = procurement.filter(p =>
-            p.procurementStatus.toLowerCase().includes('done')
-        ).length;
-        const startedProducts = procurement.filter(p =>
-            p.procurementStatus.toLowerCase() === 'started' ||
-            p.procurementStatus.toLowerCase() === 'almost done'
-        ).length;
-
-        const allChecks = assignments.flatMap(a => a.progress.filter(p => p !== null));
-        const doneChecks = allChecks.filter(Boolean).length;
-        const totalChecks = allChecks.length;
+        const curricula = variants.length;
+        const modulesTracked = variants.reduce((sum, v) => sum + v.modules.length, 0);
+        const totalChecks = variants.reduce((sum, v) => sum + v.totalChecks, 0);
+        const doneChecks = variants.reduce((sum, v) => sum + v.doneChecks, 0);
+        const overallPct = totalChecks > 0 ? Math.round(doneChecks / totalChecks * 100) : 0;
+        const fullyComplete = variants.filter(v => v.completionPct === 100).length;
 
         app.innerHTML = `
             <div class="stats-row">
                 <div class="stat-card">
-                    <div class="label">Overall Module Progress</div>
-                    <div class="value">${totalChecks ? Math.round(doneChecks / totalChecks * 100) : 0}%</div>
-                    <div class="detail">${doneChecks} of ${totalChecks} units/modules complete</div>
+                    <div class="label">Curricula Tracked</div>
+                    <div class="value">${curricula}</div>
+                    <div class="detail">unique curriculum variants</div>
                 </div>
                 <div class="stat-card">
-                    <div class="label">Products Online</div>
-                    <div class="value">${doneProducts}</div>
-                    <div class="detail">of ${totalProducts} active products</div>
+                    <div class="label">Modules Tracked</div>
+                    <div class="value">${modulesTracked}</div>
+                    <div class="detail">total module/unit rows</div>
                 </div>
                 <div class="stat-card">
-                    <div class="label">In Progress</div>
-                    <div class="value">${startedProducts}</div>
-                    <div class="detail">started or almost done</div>
+                    <div class="label">Overall Completion</div>
+                    <div class="value">${overallPct}%</div>
+                    <div class="detail">${doneChecks} of ${totalChecks} checks done</div>
                 </div>
                 <div class="stat-card">
-                    <div class="label">Not Started</div>
-                    <div class="value">${totalProducts - doneProducts - startedProducts}</div>
-                    <div class="detail">awaiting kickoff</div>
+                    <div class="label">Fully Complete</div>
+                    <div class="value">${fullyComplete}</div>
+                    <div class="detail">variants at 100%</div>
                 </div>
             </div>
 
-            <!-- Headlines -->
-            <div class="headlines-card">
-                <h2>Weekly Highlights</h2>
-                <div id="headlines" class="headline-list"></div>
-            </div>
-
-            <!-- Pipeline detail (moved up) -->
-            <div class="card" style="margin-bottom: 32px;">
-                <h2>Curriculum Pipeline — Module-Level Detail</h2>
-                <div class="legend">
-                    <div class="legend-item"><div class="legend-swatch" style="background: rgba(74, 222, 128, 0.25)"></div> Complete</div>
-                    <div class="legend-item"><div class="legend-swatch" style="background: rgba(248, 113, 113, 0.12)"></div> Not Complete</div>
-                    <div class="legend-item"><div class="legend-swatch" style="background: rgba(148, 163, 184, 0.08)"></div> N/A</div>
-                </div>
-                <div class="filter-bar">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="active">Active Only</button>
-                    <button class="filter-btn" data-filter="procurement">In-Progress Procurement</button>
-                    <button class="filter-btn" data-filter="conversion">In-Progress Conversion</button>
-                </div>
-                <div class="pipeline-wrapper collapsed" id="pipelineWrapper">
-                    <div id="pipelineTable"></div>
-                </div>
-                <button class="expand-btn" id="expandBtn" onclick="togglePipeline()">Show all rows</button>
-            </div>
-
-            <div class="grid">
-                <!-- Timeline -->
-                <div class="card full-width">
-                    <h2>Procurement Timeline</h2>
-                    <div class="legend">
-                        <div class="legend-item"><div class="legend-swatch" style="background: rgba(74, 222, 128, 0.5)"></div> Done</div>
-                        <div class="legend-item"><div class="legend-swatch" style="background: rgba(251, 191, 36, 0.4)"></div> Almost Done</div>
-                        <div class="legend-item"><div class="legend-swatch" style="background: rgba(56, 189, 248, 0.4)"></div> In Progress</div>
-                        <div class="legend-item"><div class="legend-swatch" style="background: rgba(148, 163, 184, 0.15); border: 1px solid rgba(148, 163, 184, 0.3)"></div> Upcoming</div>
-                    </div>
-                    <div id="timeline"></div>
-                </div>
-
+            <div class="grid" style="margin-bottom: 32px;">
                 <!-- Status donut -->
                 <div class="card">
-                    <h2>Procurement Status</h2>
+                    <h2>Completion Tier Distribution</h2>
                     <canvas id="statusChart" height="260"></canvas>
                 </div>
 
-                <!-- Priority -->
-                <div class="card">
-                    <h2>Priority & Deadlines</h2>
-                    <div id="priorityList"></div>
+                <!-- Placeholder for future chart -->
+                <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--muted); font-size: 0.85rem; text-align: center; gap: 8px;">
+                    <div style="font-size: 2rem; opacity: 0.3;">&#9635;</div>
+                    <div>Timeline view removed<br><span style="font-size: 0.75rem;">No date data in this source</span></div>
                 </div>
+            </div>
+
+            <!-- Main curriculum table -->
+            <div class="card full-width" style="margin-bottom: 32px;">
+                <h2>Curriculum Variant Detail</h2>
+                <div class="pipeline-wrapper collapsed" id="pipelineWrapper">
+                    <div id="variantTable"></div>
+                </div>
+                <button class="expand-btn" id="expandBtn" onclick="togglePipeline()">Show all rows</button>
             </div>
         `;
 
-        renderHeadlines(procurement, assignments);
-        renderTimeline(procurement);
-        renderStatusChart(procurement);
-        renderPriorityList(procurement, assignments);
-        renderPipelineTable(procurement, assignments, 'all');
-
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                renderPipelineTable(procurement, assignments, btn.dataset.filter);
-            });
-        });
+        renderStatusChart(variants);
+        renderVariantTable(variants);
     }
 
-    function renderHeadlines(procurement, assignments) {
-        const container = document.getElementById('headlines');
-        const headlines = [];
-        const now = new Date();
-        const oneWeekFromNow = new Date(now.getTime() + 7 * 86400000);
+    function renderStatusChart(variants) {
+        const complete = variants.filter(v => v.completionPct === 100).length;
+        const inProgress = variants.filter(v => v.completionPct > 0 && v.completionPct < 100).length;
+        const notStarted = variants.filter(v => v.completionPct === 0).length;
 
-        // Helper: parse deadline strings like "M2 by 3/31", "U1 by 3/15", "U1 & U2 by 3/15"
-        function parseDeadlineDate(dl) {
-            const match = dl.match(/(\d{1,2})\/(\d{1,2})/);
-            if (match) return new Date(2026, parseInt(match[1]) - 1, parseInt(match[2]));
-            return null;
+        if (statusChartInstance) {
+            statusChartInstance.destroy();
+            statusChartInstance = null;
         }
 
-        // 1. Deadlines passed or within the next 7 days
-        const deadlineCurricula = new Map(); // code -> { deadline, date, name }
-        for (const a of assignments) {
-            if (!a.deadline) continue;
-            const dlDate = parseDeadlineDate(a.deadline);
-            if (!dlDate) continue;
-            const existing = deadlineCurricula.get(a.curriculum);
-            if (!existing || dlDate < existing.date) {
-                deadlineCurricula.set(a.curriculum, {
-                    deadline: a.deadline,
-                    date: dlDate,
-                    name: CURRICULUM_NAMES[a.curriculum] || a.curriculum,
-                });
-            }
-        }
-
-        for (const [code, info] of deadlineCurricula) {
-            const daysUntil = Math.ceil((info.date - now) / 86400000);
-            if (daysUntil < 0) {
-                // Overdue — check if there's still incomplete work
-                const hasIncomplete = assignments.some(a =>
-                    a.curriculum === code && a.progress.some(p => p === false)
-                );
-                if (hasIncomplete) {
-                    headlines.push({
-                        type: 'urgent',
-                        icon: '!',
-                        text: `<strong>${info.name}</strong> deadline was <strong>${info.deadline.replace(/.*by\s*/, '')}</strong> — has incomplete modules`,
-                        sort: 0,
-                    });
-                }
-            } else if (daysUntil <= 7) {
-                headlines.push({
-                    type: 'warning',
-                    icon: '\u23F1',
-                    text: `<strong>${info.name}</strong> deadline <strong>${info.deadline}</strong> is ${daysUntil === 0 ? 'today' : `in ${daysUntil} day${daysUntil > 1 ? 's' : ''}`}`,
-                    sort: 1,
-                });
-            }
-        }
-
-        // 2. Products almost done (close to completion)
-        const almostDone = procurement.filter(p =>
-            p.procurementStatus.toLowerCase().includes('almost')
-        );
-        for (const p of almostDone) {
-            headlines.push({
-                type: 'good',
-                icon: '\u2713',
-                text: `<strong>${CURRICULUM_NAMES[p.code] || p.code}</strong> procurement is almost done — nearing completion`,
-                sort: 2,
-            });
-        }
-
-        // 3. Highest priority items that aren't done
-        const highestNotDone = procurement.filter(p =>
-            p.priority === 'Highest' && !p.procurementStatus.toLowerCase().includes('done')
-        );
-        for (const p of highestNotDone) {
-            headlines.push({
-                type: 'urgent',
-                icon: '\u2191',
-                text: `<strong>${CURRICULUM_NAMES[p.code] || p.code}</strong> is <strong>highest priority</strong> and currently ${p.procurementStatus.toLowerCase()}`,
-                sort: 0.5,
-            });
-        }
-
-        // 4. Products with significant module progress (>75% complete across all assignments)
-        const progressByCurriculum = new Map();
-        for (const a of assignments) {
-            const existing = progressByCurriculum.get(a.curriculum) || { done: 0, total: 0 };
-            const checks = a.progress.filter(p => p !== null);
-            existing.done += checks.filter(Boolean).length;
-            existing.total += checks.length;
-            progressByCurriculum.set(a.curriculum, existing);
-        }
-        for (const [code, prog] of progressByCurriculum) {
-            if (prog.total === 0) continue;
-            const pct = prog.done / prog.total;
-            const procItem = procurement.find(p => p.code === code);
-            if (!procItem) continue;
-            const s = procItem.procurementStatus.toLowerCase();
-            if (s.includes('done')) continue; // already called out
-            if (pct >= 0.75 && pct < 1) {
-                headlines.push({
-                    type: 'info',
-                    icon: '\u25B2',
-                    text: `<strong>${CURRICULUM_NAMES[code] || code}</strong> is <strong>${Math.round(pct * 100)}%</strong> through module-level work (${prog.done}/${prog.total})`,
-                    sort: 3,
-                });
-            }
-        }
-
-        // 5. Products on hold or blocked with notes about next steps
-        const onHold = procurement.filter(p =>
-            p.assignments?.toLowerCase() === 'hold' && p.nextStep
-        );
-        for (const p of onHold) {
-            const snippet = p.nextStep.length > 80 ? p.nextStep.slice(0, 80) + '...' : p.nextStep;
-            headlines.push({
-                type: 'info',
-                icon: '\u23F8',
-                text: `<strong>${CURRICULUM_NAMES[p.code] || p.code}</strong> is on hold — ${snippet}`,
-                sort: 4,
-            });
-        }
-
-        // 6. Upcoming start dates in the next 2 weeks
-        for (const p of procurement) {
-            const start = parseStartDate(p.startDate);
-            if (!start) continue;
-            const daysUntilStart = Math.ceil((start - now) / 86400000);
-            if (daysUntilStart > 0 && daysUntilStart <= 14 && p.procurementStatus.toLowerCase() === 'not started') {
-                headlines.push({
-                    type: 'info',
-                    icon: '\u2192',
-                    text: `<strong>${CURRICULUM_NAMES[p.code] || p.code}</strong> is set to kick off <strong>${p.startDate}</strong> (${daysUntilStart} days)`,
-                    sort: 3.5,
-                });
-            }
-        }
-
-        // Sort and render
-        headlines.sort((a, b) => a.sort - b.sort);
-
-        if (headlines.length === 0) {
-            container.innerHTML = '<div style="color: var(--muted); font-size: 0.85rem;">No notable updates this week.</div>';
-            return;
-        }
-
-        container.innerHTML = headlines.map(h => `
-            <div class="headline-item hl-${h.type}">
-                <div class="hl-icon">${h.icon}</div>
-                <div class="hl-text">${h.text}</div>
-            </div>
-        `).join('');
-    }
-
-    function renderTimeline(procurement) {
-        const container = document.getElementById('timeline');
-
-        // Timeline range: Feb 2026 — Jun 2026
-        const timelineStart = new Date(2026, 1, 1);  // Feb 1
-        const timelineEnd = new Date(2026, 5, 30);    // Jun 30
-        const totalMs = timelineEnd - timelineStart;
-        const now = new Date();
-
-        // Months for header
-        const months = [
-            { label: 'Feb', start: new Date(2026, 1, 1) },
-            { label: 'Mar', start: new Date(2026, 2, 1) },
-            { label: 'Apr', start: new Date(2026, 3, 1) },
-            { label: 'May', start: new Date(2026, 4, 1) },
-            { label: 'Jun', start: new Date(2026, 5, 1) },
-        ];
-
-        const currentMonth = now.getMonth(); // 0-indexed
-
-        // Filter to active products only and sort by start date / status
-        const statusOrder = { 'done': 0, 'almost': 1, 'started': 2, 'not started': 3, 'na': 4 };
-        function getStatusKey(s) {
-            s = s.toLowerCase();
-            if (s.includes('done') && !s.includes('not')) return 'done';
-            if (s.includes('almost')) return 'almost';
-            if (s === 'started') return 'started';
-            if (s === 'not started') return 'not started';
-            return 'na';
-        }
-
-        const active = procurement
-            .filter(p => {
-                const s = p.procurementStatus.toLowerCase();
-                return s && !s.includes('n/a') && s !== 'hold' && s !== '';
-            })
-            .sort((a, b) => {
-                const sa = statusOrder[getStatusKey(a.procurementStatus)] ?? 9;
-                const sb = statusOrder[getStatusKey(b.procurementStatus)] ?? 9;
-                if (sa !== sb) return sa - sb;
-                const da = parseStartDate(a.startDate);
-                const db = parseStartDate(b.startDate);
-                if (da && db) return da - db;
-                if (da) return -1;
-                if (db) return 1;
-                return 0;
-            });
-
-        // Build HTML
-        let html = '<div class="timeline-container"><div class="timeline-chart">';
-
-        // Header
-        html += '<div class="timeline-header">';
-        html += '<div class="timeline-label-col">Curriculum</div>';
-        html += '<div class="timeline-months" style="position: relative;">';
-        months.forEach(m => {
-            const isCurrent = m.start.getMonth() === currentMonth && m.start.getFullYear() === now.getFullYear();
-            html += `<div class="timeline-month ${isCurrent ? 'current' : ''}">${m.label}</div>`;
-        });
-        html += '</div></div>';
-
-        // Rows
-        // Group by status for visual clarity
-        const groups = [
-            { label: 'Online', items: active.filter(p => getStatusKey(p.procurementStatus) === 'done') },
-            { label: 'Coming Soon', items: active.filter(p => ['almost', 'started'].includes(getStatusKey(p.procurementStatus))) },
-            { label: 'Upcoming', items: active.filter(p => getStatusKey(p.procurementStatus) === 'not started') },
-        ];
-
-        groups.forEach(group => {
-            if (group.items.length === 0) return;
-
-            html += `<div class="timeline-section-label">${group.label}</div>`;
-
-            group.items.forEach(proc => {
-                const displayName = CURRICULUM_NAMES[proc.code] || proc.code;
-                const startDate = parseStartDate(proc.startDate) || new Date(2026, 2, 1);
-                const endDate = estimateEndDate(proc, startDate);
-                if (!endDate) return;
-
-                const barStart = Math.max(0, (startDate - timelineStart) / totalMs * 100);
-                const barEnd = Math.min(100, (endDate - timelineStart) / totalMs * 100);
-                const barWidth = Math.max(barEnd - barStart, 1);
-                const barClass = timelineBarClass(proc.procurementStatus);
-
-                const statusBadge = `<span class="status-badge ${statusClass(proc.procurementStatus)}" style="font-size: 0.65rem; padding: 2px 6px;">${proc.procurementStatus}</span>`;
-
-                html += `<div class="timeline-row">`;
-                html += `<div class="timeline-row-label">${displayName}</div>`;
-                html += `<div class="timeline-row-bars" style="position: relative;">`;
-
-                // Grid lines for month boundaries
-                months.forEach(m => {
-                    const pct = (m.start - timelineStart) / totalMs * 100;
-                    html += `<div class="timeline-grid-line" style="left: ${pct}%"></div>`;
-                });
-
-                // Today marker
-                if (now >= timelineStart && now <= timelineEnd) {
-                    const nowPct = (now - timelineStart) / totalMs * 100;
-                    html += `<div class="timeline-now" style="left: ${nowPct}%"></div>`;
-                }
-
-                // Bar
-                const tipText = `${proc.code}: ${proc.procurementStatus}${proc.startDate ? ' | Start: ' + proc.startDate : ''}`;
-                html += `<div class="timeline-bar ${barClass} tooltip" data-tip="${tipText}" style="left: ${barStart}%; width: ${barWidth}%;"></div>`;
-
-                html += '</div></div>';
-            });
-        });
-
-        html += '</div></div>';
-        container.innerHTML = html;
-    }
-
-    function renderStatusChart(procurement) {
-        const counts = { done: 0, almost: 0, started: 0, notStarted: 0, na: 0 };
-        for (const p of procurement) {
-            const s = p.procurementStatus.toLowerCase();
-            if (s.includes('done')) counts.done++;
-            else if (s.includes('almost')) counts.almost++;
-            else if (s === 'started') counts.started++;
-            else if (s === 'not started') counts.notStarted++;
-            else counts.na++;
-        }
-
-        new Chart(document.getElementById('statusChart'), {
+        statusChartInstance = new Chart(document.getElementById('statusChart'), {
             type: 'doughnut',
             data: {
-                labels: ['Done', 'Almost Done', 'Started', 'Not Started', 'N/A / Hold'],
+                labels: ['Complete (100%)', 'In Progress (1–99%)', 'Not Started (0%)'],
                 datasets: [{
-                    data: [counts.done, counts.almost, counts.started, counts.notStarted, counts.na],
+                    data: [complete, inProgress, notStarted],
                     backgroundColor: [
                         'rgba(74, 222, 128, 0.8)',
-                        'rgba(251, 191, 36, 0.8)',
                         'rgba(56, 189, 248, 0.8)',
                         'rgba(248, 113, 113, 0.8)',
-                        'rgba(148, 163, 184, 0.3)',
                     ],
                     borderWidth: 0,
                 }]
@@ -1052,115 +524,53 @@
         });
     }
 
-    function renderPriorityList(procurement, assignments) {
-        const container = document.getElementById('priorityList');
-        const prioritized = procurement
-            .filter(p => p.priority && !['N/A', 'n/a', ''].includes(p.priority))
-            .sort((a, b) => {
-                const order = { 'Highest': 0, 'High': 1, 'Medium': 2, 'Low': 3 };
-                return (order[a.priority] ?? 9) - (order[b.priority] ?? 9);
-            });
-
-        // Build a map of nearest deadline per curriculum from CEC Assignments
-        function getNextDeadline(code) {
-            const curAssignments = assignments.filter(a => a.curriculum === code && a.deadline);
-            if (curAssignments.length === 0) return null;
-            // Return the first non-empty deadline found
-            return curAssignments[0].deadline;
-        }
-
-        let html = '<table class="pipeline-table"><thead><tr><th>Curriculum</th><th>Priority</th><th>Status</th><th>Next Deadline</th></tr></thead><tbody>';
-        for (const p of prioritized) {
-            const displayName = CURRICULUM_NAMES[p.code] || p.code;
-            const deadline = getNextDeadline(p.code);
-            html += `<tr>
-                <td><strong>${displayName}</strong></td>
-                <td><span class="${priorityClass(p.priority)}">${p.priority}</span></td>
-                <td><span class="status-badge ${statusClass(p.procurementStatus)}">${p.procurementStatus}</span></td>
-                <td>${deadline ? `<span class="deadline-tag">${deadline}</span>` : '<span style="color: var(--muted)">\u2014</span>'}</td>
-            </tr>`;
-        }
-        html += '</tbody></table>';
-        container.innerHTML = html;
-    }
-
-    function renderPipelineTable(procurement, assignments, filter) {
-        const container = document.getElementById('pipelineTable');
-        let filteredProcurement = [...procurement];
-
-        if (filter === 'active') filteredProcurement = procurement.filter(p =>
-            !['n/a', 'hold', ''].includes(p.procurementStatus.toLowerCase()) &&
-            !p.procurementStatus.toLowerCase().includes('n/a')
-        );
-
-        // For procurement/conversion filters, we filter at the assignment row level
-        const taskFilter = (filter === 'procurement') ? 'Procurement' :
-                           (filter === 'conversion') ? 'Conversion' : null;
-
-        // When filtering by task type, only show curricula that have matching in-progress rows
-        if (taskFilter) {
-            const codesWithTask = new Set(
-                assignments
-                    .filter(a => a.task === taskFilter && a.progress.some(p => p === false))
-                    .map(a => a.curriculum)
-            );
-            filteredProcurement = procurement.filter(p => codesWithTask.has(p.code));
-        }
+    function renderVariantTable(variants) {
+        const container = document.getElementById('variantTable');
 
         let html = `<table class="pipeline-table">
             <thead><tr>
                 <th>Curriculum</th>
-                <th>Status</th>
-                <th>Grade / Task</th>
-                <th>Module/Unit Progress</th>
-                <th>Deadline</th>
+                <th>Description</th>
+                <th>Module Breakdown</th>
+                <th>Overall Progress</th>
             </tr></thead><tbody>`;
 
-        for (const cur of filteredProcurement) {
-            let curAssignments = assignments.filter(a => a.curriculum === cur.code);
+        for (const v of variants) {
+            const displayName = CURRICULUM_NAMES[v.code] || v.code;
+            const headline = v.headline
+                ? (v.headline.length > 80 ? v.headline.slice(0, 80) + '\u2026' : v.headline)
+                : '\u2014';
+            const fullHeadline = v.headline || '';
 
-            // Filter assignments to only the selected task type with incomplete work
-            if (taskFilter) {
-                curAssignments = curAssignments.filter(a => a.task === taskFilter && a.progress.some(p => p === false));
-            }
+            // Module badges
+            const badgeHtml = v.modules.map(m => {
+                const label = (m.convention === 'Unit' ? 'U' : 'M') + (m.number !== null ? m.number : '?');
+                const cls = m.totalCount === 0 ? 'none'
+                    : m.completedCount === m.totalCount ? 'complete'
+                    : m.completedCount > 0 ? 'partial'
+                    : 'none';
+                const tip = `${label}: ${m.completedCount}/${m.totalCount}`;
+                return `<span class="module-badge ${cls} tooltip" data-tip="${tip}">${label}: ${m.completedCount}/${m.totalCount}</span>`;
+            }).join('');
 
-            const displayName = CURRICULUM_NAMES[cur.code] || cur.code;
-            const rowspan = Math.max(curAssignments.length, 1);
+            // Progress bar
+            const pct = v.completionPct;
+            const barColor = progressColor(pct);
 
-            if (curAssignments.length === 0) {
-                html += `<tr>
-                    <td><strong>${displayName}</strong></td>
-                    <td><span class="status-badge ${statusClass(cur.procurementStatus)}">${cur.procurementStatus}</span></td>
-                    <td style="color: var(--muted)">\u2014</td>
-                    <td style="color: var(--muted)">No module data</td>
-                    <td>\u2014</td>
-                </tr>`;
-                continue;
-            }
-
-            curAssignments.forEach((a, idx) => {
-                const checks = a.progress.filter(p => p !== null);
-                const done = checks.filter(Boolean).length;
-                const total = checks.length;
-                const convLabel = a.convention === 'Unit' ? 'U' : 'M';
-
-                let moduleCells = '';
-                a.progress.forEach((p, mi) => {
-                    const cls = p === null ? 'na' : p ? 'done' : 'not-done';
-                    moduleCells += `<div class="module-cell ${cls} tooltip" data-tip="${convLabel}${mi + 1}">${convLabel}${mi + 1}</div>`;
-                });
-
-                html += '<tr>';
-                if (idx === 0) {
-                    html += `<td rowspan="${rowspan}"><strong>${displayName}</strong></td>`;
-                    html += `<td rowspan="${rowspan}"><span class="status-badge ${statusClass(cur.procurementStatus)}">${cur.procurementStatus}</span></td>`;
-                }
-                html += `<td>G${a.grade} \u00b7 ${a.task}</td>`;
-                html += `<td><div class="module-grid">${moduleCells}</div>
-                    <div class="progress-text">${done}/${total} complete</div></td>`;
-                html += `<td>${a.deadline ? `<span class="deadline-tag">${a.deadline}</span>` : '\u2014'}</td>`;
-                html += '</tr>';
-            });
+            html += `<tr>
+                <td>
+                    <strong>${displayName}</strong><br>
+                    <span style="color: var(--muted); font-size: 0.75rem;">${v.code}</span>
+                </td>
+                <td style="max-width: 260px; font-size: 0.82rem; color: var(--muted);" title="${fullHeadline.replace(/"/g, '&quot;')}">${headline}</td>
+                <td style="max-width: 320px;">${badgeHtml || '<span style="color: var(--muted)">—</span>'}</td>
+                <td style="min-width: 120px;">
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: ${pct}%; background: ${barColor};"></div>
+                    </div>
+                    <div class="progress-text">${pct}% &nbsp;(${v.doneChecks}/${v.totalChecks})</div>
+                </td>
+            </tr>`;
         }
 
         html += '</tbody></table>';
@@ -1184,31 +594,15 @@
 
     async function main() {
         try {
-            const [procData, assignData] = await Promise.all([
-                fetchGviz(CSV_URLS.procurement),
-                fetchGviz(CSV_URLS.assignments),
-            ]);
+            const data = await fetchGviz(DATA_URL);
+            const variants = parseProcurementFinal(data);
 
-            const procurement = parseProcurement(procData.cols, procData.rows);
-            const assignmentsParsed = parseAssignments(assignData.cols, assignData.rows);
-
-            render(procurement, assignmentsParsed);
+            render(variants);
             document.getElementById('lastRefresh').textContent =
                 `Live from Google Sheets \u00b7 ${new Date().toLocaleString()}`;
 
         } catch (err) {
             console.error('Data fetch failed:', err);
-
-            if (APPS_SCRIPT_URL) {
-                try {
-                    const resp = await fetch(APPS_SCRIPT_URL);
-                    const data = await resp.json();
-                    render(parseProcurement([], data.procurement), parseAssignments([], data.assignments));
-                    document.getElementById('lastRefresh').textContent =
-                        `Live from Google Sheets \u00b7 ${new Date().toLocaleString()}`;
-                    return;
-                } catch (e) { console.error('Apps Script also failed', e); }
-            }
 
             document.getElementById('app').innerHTML = `
                 <div class="card" style="max-width: 600px; margin: 60px auto; text-align: center;">
@@ -1220,10 +614,11 @@
                         <p style="margin-bottom: 8px;"><strong>Share the sheet:</strong></p>
                         <ol style="color: var(--muted); font-size: 0.85rem; padding-left: 20px; line-height: 1.8;">
                             <li>Open the Google Sheet</li>
-                            <li>Click <strong>Share</strong> \u2192 <strong>General access</strong> \u2192 <strong>"Anyone with the link"</strong> \u2192 <strong>Viewer</strong></li>
+                            <li>Click <strong>Share</strong> &rarr; <strong>General access</strong> &rarr; <strong>"Anyone with the link"</strong> &rarr; <strong>Viewer</strong></li>
                             <li>Reload this page</li>
                         </ol>
                     </div>
+                    <p style="color: var(--muted); font-size: 0.8rem;">Error: ${err.message}</p>
                 </div>
             `;
         }
