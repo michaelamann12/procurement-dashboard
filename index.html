@@ -397,9 +397,11 @@
 
     function parseProcurementFinal(data) {
         const { cols, rows } = data;
-        // rows[0] is the header row — skip it (already consumed by fetchGviz cols)
-        // Actually fetchGviz returns all data rows including what gviz treats as data
-        // Row 0 in gviz data is the first data row (header was consumed as cols labels)
+        // Column layout (actual sheet headers):
+        //   A: CURR VAR ID   B: Headline   C: Link
+        //   D: Grades Assigned (grade level, e.g. 6)
+        //   E: Convention ("Module" or "Unit")
+        //   F-O: Module/Unit numbers 1–10 (boolean checkboxes; null = N/A for this grade)
         const variants = [];
         const variantMap = new Map();
 
@@ -408,16 +410,15 @@
         let currentLink = '';
 
         for (const r of rows) {
-            // Col A: CURR VAR ID (carry forward)
             const colA = typeof r[0] === 'string' ? r[0].trim() : '';
             const colB = typeof r[1] === 'string' ? r[1].trim() : '';
             const colC = typeof r[2] === 'string' ? r[2].trim() : '';
-            // Col D: module number (float string like "6.0", or empty)
+            // Col D: grade level (float like "6.0")
             const colD = r[3];
             // Col E: convention ("Module", "Unit", or empty)
             const colE = typeof r[4] === 'string' ? r[4].trim() : '';
-            // Cols F onwards: booleans or empty strings
-            const checkboxCols = r.slice(5);
+            // Cols F–O: module/unit numbers 1–10 (boolean; empty string = N/A)
+            const checkboxCols = r.slice(5, 15);
 
             // Skip the header row (gviz returns it as a data row since col labels are blank)
             if (colA === 'CURR VAR ID') continue;
@@ -430,35 +431,39 @@
 
             if (!currentCode) continue;
 
-            // Parse module number
-            let moduleNum = null;
+            // Parse grade level
+            let gradeNum = null;
             if (colD !== '' && colD !== null && colD !== undefined) {
                 const n = parseFloat(String(colD));
-                if (!isNaN(n)) moduleNum = Math.round(n);
+                if (!isNaN(n)) gradeNum = Math.round(n);
             }
 
-            // Skip structural filler rows (no module number and no convention label)
-            if (moduleNum === null && !colE) continue;
+            // Skip structural filler rows (no grade and no convention label)
+            if (gradeNum === null && !colE) continue;
 
-            // Parse checkboxes: true = complete, false = incomplete, '' = N/A (skip)
-            const checkboxes = [];
-            for (const val of checkboxCols) {
-                if (val === true) checkboxes.push(true);
-                else if (val === false) checkboxes.push(false);
-                else if (val === 'true' || val === 'TRUE') checkboxes.push(true);
-                else if (val === 'false' || val === 'FALSE') checkboxes.push(false);
-                // empty string or anything else = N/A, skip
+            // Parse which module/unit numbers are checked.
+            // Index 0 = Module/Unit 1, index 1 = Module/Unit 2, ..., index 9 = Module/Unit 10.
+            // true = procured, false = not yet, '' (empty string) = N/A for this grade.
+            const moduleSlots = [];
+            for (let i = 0; i < checkboxCols.length; i++) {
+                const val = checkboxCols[i];
+                if (val === true || val === 'true' || val === 'TRUE') {
+                    moduleSlots.push({ number: i + 1, checked: true });
+                } else if (val === false || val === 'false' || val === 'FALSE') {
+                    moduleSlots.push({ number: i + 1, checked: false });
+                }
+                // empty string = N/A — this module/unit doesn't exist for this grade; skip
             }
 
-            const completedCount = checkboxes.filter(Boolean).length;
-            const totalCount = checkboxes.length;
+            const doneModules  = moduleSlots.filter(m => m.checked).length;
+            const totalModules = moduleSlots.length;
 
-            const moduleEntry = {
-                number: moduleNum,
+            const gradeEntry = {
+                grade: gradeNum,
                 convention: colE || 'Module',
-                checkboxes,
-                completedCount,
-                totalCount,
+                moduleSlots,   // [{number: 1, checked: true}, ...]
+                doneModules,
+                totalModules,
             };
 
             if (!variantMap.has(currentCode)) {
@@ -466,7 +471,7 @@
                     code: currentCode,
                     headline: currentHeadline,
                     link: currentLink,
-                    modules: [],
+                    grades: [],
                     totalChecks: 0,
                     doneChecks: 0,
                     completionPct: 0,
@@ -476,12 +481,11 @@
             }
 
             const variant = variantMap.get(currentCode);
-            variant.modules.push(moduleEntry);
-            variant.totalChecks += totalCount;
-            variant.doneChecks += completedCount;
+            variant.grades.push(gradeEntry);
+            variant.totalChecks += totalModules;
+            variant.doneChecks  += doneModules;
         }
 
-        // Compute completionPct for each variant
         for (const v of variants) {
             v.completionPct = v.totalChecks > 0
                 ? Math.round(v.doneChecks / v.totalChecks * 100)
@@ -500,53 +504,54 @@
 
     let statusChartInstance = null;
 
-    // A module is ready for authoring if it has at least one check completed
-    function moduleIsReady(m) { return m.completedCount > 0; }
+    // A grade row is "ready" if any of its module slots are checked
+    function gradeIsReady(g) { return g.doneModules > 0; }
+
+    // Count total ready module-slots across all grades of a variant
+    function variantReadySlots(v) {
+        return v.grades.reduce((sum, g) => sum + g.doneModules, 0);
+    }
 
     function render(variants) {
         const app = document.getElementById('app');
 
-        // Module-level stats (any check = ready)
-        const allModules = variants.flatMap(v =>
-            v.modules.map(m => ({ ...m, code: v.code, name: CURRICULUM_NAMES[v.code] || v.code }))
-        );
-        const modulesReady    = allModules.filter(m => moduleIsReady(m));
-        const modulesNotReady = allModules.filter(m => !moduleIsReady(m));
+        // Slot-level stats: each checked checkbox = one procured module slot
+        const allSlots     = variants.flatMap(v => v.grades.flatMap(g => g.moduleSlots));
+        const readySlots   = allSlots.filter(s => s.checked).length;
+        const notReadySlots = allSlots.filter(s => !s.checked).length;
 
-        // Group ready modules by curriculum for the banner
-        const readyByCurriculum = new Map();
-        for (const m of modulesReady) {
-            if (!readyByCurriculum.has(m.code)) {
-                readyByCurriculum.set(m.code, { name: m.name, modules: [] });
-            }
-            readyByCurriculum.get(m.code).modules.push(m);
-        }
+        // Ready curricula: those with at least one procured slot
+        const readyVariants = variants.filter(v => variantReadySlots(v) > 0);
 
-        // Sort variants: most ready modules first, then by completion pct
+        // Sort: most ready slots first, then by completion pct
         const sortedVariants = [...variants].sort((a, b) => {
-            const aReady = a.modules.filter(moduleIsReady).length;
-            const bReady = b.modules.filter(moduleIsReady).length;
-            if (bReady !== aReady) return bReady - aReady;
-            return b.completionPct - a.completionPct;
+            const diff = variantReadySlots(b) - variantReadySlots(a);
+            return diff !== 0 ? diff : b.completionPct - a.completionPct;
         });
 
-        const curricula = variants.length;
+        const curricula  = variants.length;
         const totalChecks = variants.reduce((sum, v) => sum + v.totalChecks, 0);
         const doneChecks  = variants.reduce((sum, v) => sum + v.doneChecks, 0);
         const overallPct  = totalChecks > 0 ? Math.round(doneChecks / totalChecks * 100) : 0;
 
-        // Ready for Authoring banner
+        // Ready for Authoring banner — one chip per ready curriculum
         let readySectionHtml = '';
-        if (modulesReady.length > 0) {
-            const chips = Array.from(readyByCurriculum.entries()).map(([code, { name, modules }]) => {
-                const modLabels = modules.map(m => {
-                    const conv = m.convention === 'Unit' ? 'U' : 'M';
-                    return `${conv}${m.number !== null ? m.number : '—'}`;
-                }).join(', ');
+        if (readyVariants.length > 0) {
+            const chips = readyVariants.map(v => {
+                const name = CURRICULUM_NAMES[v.code] || v.code;
+                // Summarise each grade: "G6: M1–M7" style
+                const gradeSummaries = v.grades
+                    .filter(gradeIsReady)
+                    .map(g => {
+                        const conv = g.convention === 'Unit' ? 'U' : 'M';
+                        const gradeLabel = g.grade !== null ? `G${g.grade}` : '—';
+                        const readyNums = g.moduleSlots.filter(s => s.checked).map(s => `${conv}${s.number}`).join(', ');
+                        return `${gradeLabel}: ${readyNums}`;
+                    }).join(' &nbsp;·&nbsp; ');
                 return `<div class="ready-curriculum-chip">
                     <span class="ready-chip-check">&#10003;</span>
                     <strong>${name}</strong>
-                    <span class="ready-chip-modules">${modLabels}</span>
+                    <span class="ready-chip-modules">${gradeSummaries}</span>
                 </div>`;
             }).join('');
 
@@ -555,10 +560,10 @@
                 <div class="ready-banner-header">
                     <div>
                         <div class="ready-banner-title">
-                            <span class="ready-count-badge">${modulesReady.length}</span>
-                            Modules Ready for Authoring Prep
+                            <span class="ready-count-badge">${readySlots}</span>
+                            Module Slots Ready for Authoring Prep
                         </div>
-                        <div class="ready-banner-sub">Procurement complete &mdash; these modules can move to Ready for Authoring in Jira</div>
+                        <div class="ready-banner-sub">Any check on a module = procurement complete &mdash; ready to move in Jira</div>
                     </div>
                 </div>
                 <div class="ready-curriculum-list">${chips}</div>
@@ -574,25 +579,25 @@
                     <div class="detail">unique curriculum variants</div>
                 </div>
                 <div class="stat-card">
-                    <div class="label">Modules Ready</div>
-                    <div class="value" style="color: var(--green);">${modulesReady.length}</div>
-                    <div class="detail">ready for authoring prep</div>
+                    <div class="label">Ready Slots</div>
+                    <div class="value" style="color: var(--green);">${readySlots}</div>
+                    <div class="detail">module-grade slots procured</div>
                 </div>
                 <div class="stat-card">
-                    <div class="label">Modules Not Ready</div>
-                    <div class="value" style="color: var(--red);">${modulesNotReady.length}</div>
-                    <div class="detail">procurement not yet started</div>
+                    <div class="label">Not Ready</div>
+                    <div class="value" style="color: var(--red);">${notReadySlots}</div>
+                    <div class="detail">slots not yet procured</div>
                 </div>
                 <div class="stat-card">
                     <div class="label">Procurement Progress</div>
                     <div class="value">${overallPct}%</div>
-                    <div class="detail">${doneChecks} of ${totalChecks} checks done</div>
+                    <div class="detail">${doneChecks} of ${totalChecks} slots done</div>
                 </div>
             </div>
 
             <div class="grid" style="margin-bottom: 32px;">
                 <div class="card">
-                    <h2>Module Readiness</h2>
+                    <h2>Module Slot Readiness</h2>
                     <canvas id="statusChart" height="260"></canvas>
                 </div>
                 <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--muted); font-size: 0.85rem; text-align: center; gap: 8px;">
@@ -611,7 +616,7 @@
             </div>
         `;
 
-        renderStatusChart(modulesReady.length, modulesNotReady.length);
+        renderStatusChart(readySlots, notReadySlots);
         renderVariantTable(sortedVariants);
     }
 
@@ -654,7 +659,7 @@
             <thead><tr>
                 <th>Curriculum</th>
                 <th>Description</th>
-                <th>Modules</th>
+                <th>Grade &amp; Module Breakdown</th>
                 <th>Procurement Progress</th>
             </tr></thead><tbody>`;
 
@@ -665,12 +670,19 @@
                 : '\u2014';
             const fullHeadline = v.headline || '';
 
-            // Module badges — green if any check (ready), red if no checks
-            const badgeHtml = v.modules.map(m => {
-                const label = (m.convention === 'Unit' ? 'U' : 'M') + (m.number !== null ? m.number : '—');
-                const cls = moduleIsReady(m) ? 'complete' : 'none';
-                const tip = `${label}: ${m.completedCount}/${m.totalCount} checks`;
-                return `<span class="module-badge ${cls} tooltip" data-tip="${tip}">${label}</span>`;
+            // Per-grade rows: each grade gets a label + module slot badges
+            const gradeRowsHtml = v.grades.map(g => {
+                const conv = g.convention === 'Unit' ? 'U' : 'M';
+                const gradeLabel = g.grade !== null ? `G${g.grade}` : '—';
+                const slotBadges = g.moduleSlots.map(s => {
+                    const cls = s.checked ? 'complete' : 'none';
+                    const tip = `${conv}${s.number}: ${s.checked ? 'procured' : 'not yet'}`;
+                    return `<span class="module-badge ${cls} tooltip" data-tip="${tip}">${conv}${s.number}</span>`;
+                }).join('');
+                return `<div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                    <span style="color:var(--muted); font-size:0.72rem; font-weight:600; min-width:26px;">${gradeLabel}</span>
+                    <div style="display:flex; flex-wrap:wrap; gap:3px;">${slotBadges || '<span style="color:var(--muted)">—</span>'}</div>
+                </div>`;
             }).join('');
 
             const pct = v.completionPct;
@@ -681,8 +693,8 @@
                     <strong>${displayName}</strong><br>
                     <span style="color: var(--muted); font-size: 0.75rem;">${v.code}</span>
                 </td>
-                <td style="max-width: 260px; font-size: 0.82rem; color: var(--muted);" title="${fullHeadline.replace(/"/g, '&quot;')}">${headline}</td>
-                <td style="max-width: 320px;">${badgeHtml || '<span style="color: var(--muted)">—</span>'}</td>
+                <td style="max-width: 200px; font-size: 0.82rem; color: var(--muted);" title="${fullHeadline.replace(/"/g, '&quot;')}">${headline}</td>
+                <td style="max-width: 380px;">${gradeRowsHtml || '<span style="color:var(--muted)">—</span>'}</td>
                 <td style="min-width: 120px;">
                     <div class="progress-bar-bg">
                         <div class="progress-bar-fill" style="width: ${pct}%; background: ${barColor};"></div>
