@@ -589,6 +589,16 @@
 
         app.innerHTML = `
             ${readySectionHtml}
+
+            <!-- Main curriculum table -->
+            <div class="card full-width" style="margin-bottom: 32px;">
+                <h2>Curriculum Variant Detail</h2>
+                <div class="pipeline-wrapper collapsed" id="pipelineWrapper">
+                    <div id="variantTable"></div>
+                </div>
+                <button class="expand-btn" id="expandBtn" onclick="togglePipeline()">Show all rows</button>
+            </div>
+
             <div class="stats-row">
                 <div class="stat-card">
                     <div class="label">Curricula Tracked</div>
@@ -623,14 +633,6 @@
                 </div>
             </div>
 
-            <!-- Main curriculum table -->
-            <div class="card full-width" style="margin-bottom: 32px;">
-                <h2>Curriculum Variant Detail</h2>
-                <div class="pipeline-wrapper collapsed" id="pipelineWrapper">
-                    <div id="variantTable"></div>
-                </div>
-                <button class="expand-btn" id="expandBtn" onclick="togglePipeline()">Show all rows</button>
-            </div>
         `;
 
         renderStatusChart(readySlots, notReadySlots);
