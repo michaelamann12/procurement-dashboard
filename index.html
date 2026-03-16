@@ -324,6 +324,23 @@
             color: var(--green);
             font-size: 0.9rem;
         }
+
+        /* ── Collapsible description ── */
+        .desc-short { display: block; }
+        .desc-full  { display: none; }
+        .desc-toggle {
+            display: inline-block;
+            margin-top: 4px;
+            color: var(--accent);
+            font-size: 0.72rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        .desc-toggle:hover { text-decoration: underline; }
+        .desc-expanded .desc-short { display: none; }
+        .desc-expanded .desc-full  { display: block; }
     </style>
 </head>
 <body>
@@ -663,12 +680,21 @@
                 <th>Procurement Progress</th>
             </tr></thead><tbody>`;
 
+        let descIdx = 0;
         for (const v of variants) {
             const displayName = CURRICULUM_NAMES[v.code] || v.code;
-            const headline = v.headline
-                ? (v.headline.length > 80 ? v.headline.slice(0, 80) + '\u2026' : v.headline)
-                : '\u2014';
             const fullHeadline = v.headline || '';
+            const SHORT_LEN = 80;
+            const needsToggle = fullHeadline.length > SHORT_LEN;
+            const shortHeadline = needsToggle ? fullHeadline.slice(0, SHORT_LEN) + '\u2026' : fullHeadline;
+            const idx = descIdx++;
+            const descHtml = fullHeadline
+                ? (needsToggle
+                    ? `<span class="desc-short">${shortHeadline}</span>
+                       <span class="desc-full">${fullHeadline}</span>
+                       <button class="desc-toggle" onclick="toggleDesc(${idx})">Show more</button>`
+                    : fullHeadline)
+                : '\u2014';
 
             // Per-grade rows: each grade gets a label + module slot badges
             const gradeRowsHtml = v.grades.map(g => {
@@ -693,7 +719,7 @@
                     <strong>${displayName}</strong><br>
                     <span style="color: var(--muted); font-size: 0.75rem;">${v.code}</span>
                 </td>
-                <td style="max-width: 200px; font-size: 0.82rem; color: var(--muted);" title="${fullHeadline.replace(/"/g, '&quot;')}">${headline}</td>
+                <td style="max-width: 220px; font-size: 0.82rem; color: var(--muted);" id="desc-cell-${idx}">${descHtml}</td>
                 <td style="max-width: 380px;">${gradeRowsHtml || '<span style="color:var(--muted)">—</span>'}</td>
                 <td style="min-width: 120px;">
                     <div class="progress-bar-bg">
@@ -706,6 +732,13 @@
 
         html += '</tbody></table>';
         container.innerHTML = html;
+    }
+
+    function toggleDesc(idx) {
+        const cell = document.getElementById(`desc-cell-${idx}`);
+        const btn  = cell.querySelector('.desc-toggle');
+        const expanded = cell.classList.toggle('desc-expanded');
+        btn.textContent = expanded ? 'Show less' : 'Show more';
     }
 
     function togglePipeline() {
