@@ -255,6 +255,75 @@
             background: rgba(56, 189, 248, 0.08);
             border-color: var(--accent);
         }
+
+        /* ── Ready for Authoring banner ── */
+        .ready-banner {
+            background: rgba(74, 222, 128, 0.05);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+        .ready-banner-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .ready-banner-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--green);
+        }
+        .ready-count-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            padding: 0 6px;
+            border-radius: 99px;
+            background: var(--green);
+            color: #0f172a;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+        .ready-banner-sub {
+            color: var(--muted);
+            font-size: 0.78rem;
+            margin-top: 3px;
+            padding-left: 38px;
+        }
+        .ready-curriculum-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .ready-curriculum-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.25);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+        }
+        .ready-curriculum-chip strong { color: white; }
+        .ready-chip-modules {
+            color: var(--green);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .ready-chip-check {
+            color: var(--green);
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -431,17 +500,73 @@
 
     let statusChartInstance = null;
 
+    // A module is ready for authoring if it has at least one check completed
+    function moduleIsReady(m) { return m.completedCount > 0; }
+
     function render(variants) {
         const app = document.getElementById('app');
 
+        // Module-level stats (any check = ready)
+        const allModules = variants.flatMap(v =>
+            v.modules.map(m => ({ ...m, code: v.code, name: CURRICULUM_NAMES[v.code] || v.code }))
+        );
+        const modulesReady    = allModules.filter(m => moduleIsReady(m));
+        const modulesNotReady = allModules.filter(m => !moduleIsReady(m));
+
+        // Group ready modules by curriculum for the banner
+        const readyByCurriculum = new Map();
+        for (const m of modulesReady) {
+            if (!readyByCurriculum.has(m.code)) {
+                readyByCurriculum.set(m.code, { name: m.name, modules: [] });
+            }
+            readyByCurriculum.get(m.code).modules.push(m);
+        }
+
+        // Sort variants: most ready modules first, then by completion pct
+        const sortedVariants = [...variants].sort((a, b) => {
+            const aReady = a.modules.filter(moduleIsReady).length;
+            const bReady = b.modules.filter(moduleIsReady).length;
+            if (bReady !== aReady) return bReady - aReady;
+            return b.completionPct - a.completionPct;
+        });
+
         const curricula = variants.length;
-        const modulesTracked = variants.reduce((sum, v) => sum + v.modules.length, 0);
         const totalChecks = variants.reduce((sum, v) => sum + v.totalChecks, 0);
-        const doneChecks = variants.reduce((sum, v) => sum + v.doneChecks, 0);
-        const overallPct = totalChecks > 0 ? Math.round(doneChecks / totalChecks * 100) : 0;
-        const fullyComplete = variants.filter(v => v.completionPct === 100).length;
+        const doneChecks  = variants.reduce((sum, v) => sum + v.doneChecks, 0);
+        const overallPct  = totalChecks > 0 ? Math.round(doneChecks / totalChecks * 100) : 0;
+
+        // Ready for Authoring banner
+        let readySectionHtml = '';
+        if (modulesReady.length > 0) {
+            const chips = Array.from(readyByCurriculum.entries()).map(([code, { name, modules }]) => {
+                const modLabels = modules.map(m => {
+                    const conv = m.convention === 'Unit' ? 'U' : 'M';
+                    return `${conv}${m.number !== null ? m.number : '—'}`;
+                }).join(', ');
+                return `<div class="ready-curriculum-chip">
+                    <span class="ready-chip-check">&#10003;</span>
+                    <strong>${name}</strong>
+                    <span class="ready-chip-modules">${modLabels}</span>
+                </div>`;
+            }).join('');
+
+            readySectionHtml = `
+            <div class="ready-banner">
+                <div class="ready-banner-header">
+                    <div>
+                        <div class="ready-banner-title">
+                            <span class="ready-count-badge">${modulesReady.length}</span>
+                            Modules Ready for Authoring Prep
+                        </div>
+                        <div class="ready-banner-sub">Procurement complete &mdash; these modules can move to Ready for Authoring in Jira</div>
+                    </div>
+                </div>
+                <div class="ready-curriculum-list">${chips}</div>
+            </div>`;
+        }
 
         app.innerHTML = `
+            ${readySectionHtml}
             <div class="stats-row">
                 <div class="stat-card">
                     <div class="label">Curricula Tracked</div>
@@ -449,33 +574,30 @@
                     <div class="detail">unique curriculum variants</div>
                 </div>
                 <div class="stat-card">
-                    <div class="label">Modules Tracked</div>
-                    <div class="value">${modulesTracked}</div>
-                    <div class="detail">total module/unit rows</div>
+                    <div class="label">Modules Ready</div>
+                    <div class="value" style="color: var(--green);">${modulesReady.length}</div>
+                    <div class="detail">ready for authoring prep</div>
                 </div>
                 <div class="stat-card">
-                    <div class="label">Overall Completion</div>
+                    <div class="label">Modules Not Ready</div>
+                    <div class="value" style="color: var(--red);">${modulesNotReady.length}</div>
+                    <div class="detail">procurement not yet started</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Procurement Progress</div>
                     <div class="value">${overallPct}%</div>
                     <div class="detail">${doneChecks} of ${totalChecks} checks done</div>
-                </div>
-                <div class="stat-card">
-                    <div class="label">Fully Complete</div>
-                    <div class="value">${fullyComplete}</div>
-                    <div class="detail">variants at 100%</div>
                 </div>
             </div>
 
             <div class="grid" style="margin-bottom: 32px;">
-                <!-- Status donut -->
                 <div class="card">
-                    <h2>Completion Tier Distribution</h2>
+                    <h2>Module Readiness</h2>
                     <canvas id="statusChart" height="260"></canvas>
                 </div>
-
-                <!-- Placeholder for future chart -->
                 <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--muted); font-size: 0.85rem; text-align: center; gap: 8px;">
                     <div style="font-size: 2rem; opacity: 0.3;">&#9635;</div>
-                    <div>Timeline view removed<br><span style="font-size: 0.75rem;">No date data in this source</span></div>
+                    <div>Timeline view<br><span style="font-size: 0.75rem;">No date data in this source</span></div>
                 </div>
             </div>
 
@@ -489,15 +611,11 @@
             </div>
         `;
 
-        renderStatusChart(variants);
-        renderVariantTable(variants);
+        renderStatusChart(modulesReady.length, modulesNotReady.length);
+        renderVariantTable(sortedVariants);
     }
 
-    function renderStatusChart(variants) {
-        const complete = variants.filter(v => v.completionPct === 100).length;
-        const inProgress = variants.filter(v => v.completionPct > 0 && v.completionPct < 100).length;
-        const notStarted = variants.filter(v => v.completionPct === 0).length;
-
+    function renderStatusChart(ready, notReady) {
         if (statusChartInstance) {
             statusChartInstance.destroy();
             statusChartInstance = null;
@@ -506,12 +624,11 @@
         statusChartInstance = new Chart(document.getElementById('statusChart'), {
             type: 'doughnut',
             data: {
-                labels: ['Complete (100%)', 'In Progress (1–99%)', 'Not Started (0%)'],
+                labels: ['Ready for Authoring', 'Not Yet Ready'],
                 datasets: [{
-                    data: [complete, inProgress, notStarted],
+                    data: [ready, notReady],
                     backgroundColor: [
                         'rgba(74, 222, 128, 0.8)',
-                        'rgba(56, 189, 248, 0.8)',
                         'rgba(248, 113, 113, 0.8)',
                     ],
                     borderWidth: 0,
@@ -537,8 +654,8 @@
             <thead><tr>
                 <th>Curriculum</th>
                 <th>Description</th>
-                <th>Module Breakdown</th>
-                <th>Overall Progress</th>
+                <th>Modules</th>
+                <th>Procurement Progress</th>
             </tr></thead><tbody>`;
 
         for (const v of variants) {
@@ -548,18 +665,14 @@
                 : '\u2014';
             const fullHeadline = v.headline || '';
 
-            // Module badges
+            // Module badges — green if any check (ready), red if no checks
             const badgeHtml = v.modules.map(m => {
                 const label = (m.convention === 'Unit' ? 'U' : 'M') + (m.number !== null ? m.number : '—');
-                const cls = m.totalCount === 0 ? 'none'
-                    : m.completedCount === m.totalCount ? 'complete'
-                    : m.completedCount > 0 ? 'partial'
-                    : 'none';
-                const tip = `${label}: ${m.completedCount}/${m.totalCount}`;
-                return `<span class="module-badge ${cls} tooltip" data-tip="${tip}">${label}: ${m.completedCount}/${m.totalCount}</span>`;
+                const cls = moduleIsReady(m) ? 'complete' : 'none';
+                const tip = `${label}: ${m.completedCount}/${m.totalCount} checks`;
+                return `<span class="module-badge ${cls} tooltip" data-tip="${tip}">${label}</span>`;
             }).join('');
 
-            // Progress bar
             const pct = v.completionPct;
             const barColor = progressColor(pct);
 
