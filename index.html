@@ -350,6 +350,9 @@
             // Cols F onwards: booleans or empty strings
             const checkboxCols = r.slice(5);
 
+            // Skip the header row (gviz returns it as a data row since col labels are blank)
+            if (colA === 'CURR VAR ID') continue;
+
             if (colA) {
                 currentCode = colA;
                 currentHeadline = colB;
@@ -364,6 +367,9 @@
                 const n = parseFloat(String(colD));
                 if (!isNaN(n)) moduleNum = Math.round(n);
             }
+
+            // Skip structural filler rows (no module number and no convention label)
+            if (moduleNum === null && !colE) continue;
 
             // Parse checkboxes: true = complete, false = incomplete, '' = N/A (skip)
             const checkboxes = [];
@@ -544,7 +550,7 @@
 
             // Module badges
             const badgeHtml = v.modules.map(m => {
-                const label = (m.convention === 'Unit' ? 'U' : 'M') + (m.number !== null ? m.number : '?');
+                const label = (m.convention === 'Unit' ? 'U' : 'M') + (m.number !== null ? m.number : '—');
                 const cls = m.totalCount === 0 ? 'none'
                     : m.completedCount === m.totalCount ? 'complete'
                     : m.completedCount > 0 ? 'partial'
